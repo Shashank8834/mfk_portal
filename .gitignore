@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+build/
+
+# env files
+.env*
+
+# misc
+.DS_Store
+*.pem
+*.tsbuildinfo
+next-env.d.ts
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# large/temp files
+screenshots.zip
+*.pptx
+
+# vercel
+.vercel
+
+# claude
+.claude/
