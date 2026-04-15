@@ -5,11 +5,13 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useFavoritesStore } from '@/stores/favoritesStore';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 const tabs = [
   {
     href: '/stories',
-    label: 'Stories',
+    labelKey: 'mobile.stories',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="5 3 19 12 5 21 5 3" />
@@ -18,7 +20,7 @@ const tabs = [
   },
   {
     href: '/map',
-    label: 'Map',
+    labelKey: 'mobile.map',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
@@ -29,7 +31,7 @@ const tabs = [
   },
   {
     href: '/publications',
-    label: 'Read',
+    labelKey: 'mobile.read',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
@@ -39,7 +41,7 @@ const tabs = [
   },
   {
     href: '/favorites',
-    label: 'Favorites',
+    labelKey: 'mobile.favorites',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -49,7 +51,7 @@ const tabs = [
   },
   {
     href: '/auth',
-    label: 'Profile',
+    labelKey: 'mobile.profile',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -62,6 +64,7 @@ const tabs = [
 export function MobileBottomNav() {
   const pathname = usePathname();
   const favCount = useFavoritesStore((s) => s.favorites.length);
+  const locale = useLocaleStore((s) => s.locale);
 
   return (
     <nav aria-label="Mobile navigation" className="fixed bottom-0 left-0 right-0 z-50 md:hidden glass-elevated border-t border-border safe-bottom">
@@ -85,7 +88,7 @@ export function MobileBottomNav() {
                   </span>
                 )}
               </div>
-              <span className="text-[10px] font-medium">{tab.label}</span>
+              <span className="text-[10px] font-medium">{t(tab.labelKey, locale)}</span>
               {isActive && (
                 <motion.div
                   layoutId="mobile-tab-indicator"

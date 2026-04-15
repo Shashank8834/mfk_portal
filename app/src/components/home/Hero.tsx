@@ -4,14 +4,18 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { Button } from '@/components/ui/Button';
-
-const stats: { value: number; suffix: string; label: string; prefix?: string }[] = [
-  { value: 28, suffix: '', label: 'Schools' },
-  { value: 8400, suffix: '+', label: 'Students' },
-  { value: 4500, suffix: '+', label: 'Stories Shared' },
-];
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 export function Hero() {
+  const locale = useLocaleStore((s) => s.locale);
+
+  const stats: { value: number; suffix: string; label: string; prefix?: string }[] = [
+    { value: 28, suffix: '', label: t('hero.schools', locale) },
+    { value: 8400, suffix: '+', label: t('hero.students', locale) },
+    { value: 4500, suffix: '+', label: t('hero.storiesShared', locale) },
+  ];
+
   return (
     <section className="relative min-h-[100vh] flex items-center overflow-hidden">
       {/* Animated gradient mesh background */}
@@ -38,7 +42,7 @@ export function Hero() {
                 className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-sm text-primary font-medium mb-6"
               >
                 <span className="w-2 h-2 rounded-full bg-mint animate-pulse" />
-                A Not-for-Profit by BCL India
+                {t('hero.badge', locale)}
               </motion.span>
 
               <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl xl:text-7xl leading-[1.08] tracking-tight text-balance">
@@ -48,7 +52,7 @@ export function Hero() {
                   transition={{ delay: 0.3, duration: 0.6 }}
                   className="block text-text-primary"
                 >
-                  Financial Literacy
+                  {t('hero.heading1', locale)}
                 </motion.span>
                 <motion.span
                   initial={{ opacity: 0, y: 20 }}
@@ -56,7 +60,7 @@ export function Hero() {
                   transition={{ delay: 0.5, duration: 0.6 }}
                   className="block gradient-text"
                 >
-                  For Underprivileged
+                  {t('hero.heading2', locale)}
                 </motion.span>
                 <motion.span
                   initial={{ opacity: 0, y: 20 }}
@@ -64,7 +68,7 @@ export function Hero() {
                   transition={{ delay: 0.7, duration: 0.6 }}
                   className="block text-text-primary"
                 >
-                  Schoolchildren.
+                  {t('hero.heading3', locale)}
                 </motion.span>
               </h1>
             </motion.div>
@@ -75,9 +79,7 @@ export function Hero() {
               transition={{ delay: 0.9, duration: 0.6 }}
               className="text-text-muted text-lg md:text-xl leading-relaxed max-w-lg text-balance"
             >
-              Students maintain daily journals, build good habits, and earn rewards.
-              Every month, ₹250 is invested into their mutual fund — teaching real
-              financial literacy to underprivileged schoolchildren.
+              {t('hero.body', locale)}
             </motion.p>
 
             <motion.div
@@ -91,7 +93,7 @@ export function Hero() {
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
-                  Watch Stories
+                  {t('hero.cta.stories', locale)}
                 </Button>
               </Link>
               <Link href="/map">
@@ -101,7 +103,7 @@ export function Hero() {
                     <line x1="8" y1="2" x2="8" y2="18" />
                     <line x1="16" y1="6" x2="16" y2="22" />
                   </svg>
-                  Explore Map
+                  {t('hero.exploreMap', locale)}
                 </Button>
               </Link>
             </motion.div>
@@ -189,8 +191,8 @@ export function Hero() {
                 {/* Gradient overlay */}
                 <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-bg-card via-bg-card/50 to-transparent" />
                 <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between">
-                  <p className="text-text-muted text-sm">Student story reel</p>
-                  <span className="text-xs text-primary/60 font-mono">28 schools</span>
+                  <p className="text-text-muted text-sm">{t('hero.storyReel', locale)}</p>
+                  <span className="text-xs text-primary/60 font-mono">28 {t('hero.schools', locale).toLowerCase()}</span>
                 </div>
               </div>
             </div>
@@ -203,8 +205,8 @@ export function Hero() {
             >
               <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-lg">🎬</div>
               <div>
-                <p className="text-sm font-semibold text-text-primary">4,500+ Videos</p>
-                <p className="text-xs text-text-muted">Student stories shared</p>
+                <p className="text-sm font-semibold text-text-primary">{t('hero.videos', locale)}</p>
+                <p className="text-xs text-text-muted">{t('hero.videosDesc', locale)}</p>
               </div>
             </motion.div>
 
@@ -215,8 +217,8 @@ export function Hero() {
             >
               <div className="w-10 h-10 rounded-full bg-mint/20 flex items-center justify-center text-lg">✨</div>
               <div>
-                <p className="text-sm font-semibold text-text-primary">New Story Daily</p>
-                <p className="text-xs text-text-muted">From 28 schools</p>
+                <p className="text-sm font-semibold text-text-primary">{t('hero.newStory', locale)}</p>
+                <p className="text-xs text-text-muted">{t('hero.newStoryDesc', locale)}</p>
               </div>
             </motion.div>
           </motion.div>

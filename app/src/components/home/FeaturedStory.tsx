@@ -8,8 +8,11 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 export function FeaturedStory() {
+  const locale = useLocaleStore((s) => s.locale);
   const featured = getTrendingStudents(1)[0];
   if (!featured) return null;
 
@@ -29,12 +32,12 @@ export function FeaturedStory() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="text-gold text-sm font-semibold uppercase tracking-wider font-mono">Featured</span>
+          <span className="text-gold text-sm font-semibold uppercase tracking-wider font-mono">{t('featured.label', locale)}</span>
           <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-text-primary mt-3">
-            Story Spotlight
+            {t('featured.title', locale)}
           </h2>
           <p className="text-text-muted mt-3 text-lg max-w-xl mx-auto">
-            Every student has a story worth watching. Here&apos;s one that stood out this week.
+            {t('featured.desc', locale)}
           </p>
         </motion.div>
 
@@ -108,31 +111,35 @@ export function FeaturedStory() {
                   </div>
 
                   <p className="text-text-muted leading-relaxed">
-                    {featured.name.split(' ')[0]} has been part of the MFK program for {featured.monthsActive} months,
-                    logging {featured.journalsLogged} journals and earning {featured.skillsEarned} skill badges.
-                    Watch their journey unfold through {featured.videos.length} personal stories.
+                    {t('featured.bio', locale, {
+                      name: featured.name.split(' ')[0],
+                      months: String(featured.monthsActive),
+                      journals: String(featured.journalsLogged),
+                      skills: String(featured.skillsEarned),
+                      videoCount: String(featured.videos.length),
+                    })}
                   </p>
 
                   {/* Quick stats */}
                   <div className="grid grid-cols-3 gap-3">
                     <div className="text-center py-3 glass rounded-xl">
                       <div className="font-display font-bold text-xl text-primary">{featured.videos.length}</div>
-                      <p className="text-text-muted text-[10px] uppercase tracking-wider mt-0.5">Videos</p>
+                      <p className="text-text-muted text-[10px] uppercase tracking-wider mt-0.5">{t('featured.videos', locale)}</p>
                     </div>
                     <div className="text-center py-3 glass rounded-xl">
                       <div className="font-display font-bold text-xl text-gold">{featured.skillsEarned}</div>
-                      <p className="text-text-muted text-[10px] uppercase tracking-wider mt-0.5">Skills</p>
+                      <p className="text-text-muted text-[10px] uppercase tracking-wider mt-0.5">{t('featured.skills', locale)}</p>
                     </div>
                     <div className="text-center py-3 glass rounded-xl">
                       <div className="font-display font-bold text-xl text-mint">{featured.monthsActive}</div>
-                      <p className="text-text-muted text-[10px] uppercase tracking-wider mt-0.5">Months</p>
+                      <p className="text-text-muted text-[10px] uppercase tracking-wider mt-0.5">{t('featured.months', locale)}</p>
                     </div>
                   </div>
 
                   {/* More videos from this student */}
                   {recentVideos.length > 1 && (
                     <div>
-                      <p className="text-text-muted text-xs uppercase tracking-wider mb-2">More from {featured.name.split(' ')[0]}</p>
+                      <p className="text-text-muted text-xs uppercase tracking-wider mb-2">{t('featured.moreFrom', locale, { name: featured.name.split(' ')[0] })}</p>
                       <div className="flex gap-2">
                         {recentVideos.slice(1).map((vid) => (
                           <div key={vid.id} className="relative w-24 h-16 rounded-lg overflow-hidden group/thumb">
@@ -160,7 +167,7 @@ export function FeaturedStory() {
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                         <polygon points="5,3 19,12 5,21" />
                       </svg>
-                      Watch {featured.name.split(' ')[0]}&apos;s Story
+                      {t('featured.watchStory', locale, { name: featured.name.split(' ')[0] })}
                     </Button>
                   </Link>
                 </div>

@@ -3,8 +3,11 @@
 import { motion } from 'framer-motion';
 import { StudentCard } from '@/components/ui/StudentCard';
 import { getTrendingStudents } from '@/data/students';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 export function TrendingStories() {
+  const locale = useLocaleStore((s) => s.locale);
   const trendingStudents = getTrendingStudents(12);
 
   return (
@@ -19,12 +22,12 @@ export function TrendingStories() {
           className="flex items-end justify-between mb-10"
         >
           <div>
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider font-mono">Trending</span>
+            <span className="text-primary text-sm font-semibold uppercase tracking-wider font-mono">{t('trending.label', locale)}</span>
             <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">
-              Student Stories
+              {t('trending.title', locale)}
             </h2>
             <p className="text-text-muted mt-2 text-lg max-w-md">
-              Watch the latest stories from students across our schools
+              {t('trending.desc', locale)}
             </p>
           </div>
           <motion.a
@@ -32,7 +35,7 @@ export function TrendingStories() {
             whileHover={{ x: 4 }}
             className="hidden md:flex items-center gap-2 text-primary text-sm font-medium hover:text-primary-glow transition-colors"
           >
-            View all
+            {t('trending.viewAll', locale)}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -58,7 +61,7 @@ export function TrendingStories() {
             href="/stories"
             className="inline-flex items-center gap-2 text-primary text-sm font-medium"
           >
-            View all stories
+            {t('trending.viewAllStories', locale)}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>

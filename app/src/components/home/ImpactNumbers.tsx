@@ -2,22 +2,24 @@
 
 import { motion } from 'framer-motion';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
-
-const metrics = [
-  { value: 28, label: 'Schools Enrolled', subLabel: 'Government high schools in Bangalore', prefix: '', suffix: '', icon: '🏫' },
-  { value: 8400, label: 'Students Impacted', subLabel: 'Across grades 8–10', prefix: '', suffix: '+', icon: '👨‍🎓' },
-  { value: 1.2, label: 'Funds Raised', subLabel: 'Funded by 300+ donors', prefix: '₹', suffix: 'Cr', icon: '💰', decimals: 1 },
-  { value: 120, label: 'Volunteers Active', subLabel: 'Teachers & mentors on ground', prefix: '', suffix: '+', icon: '🤝' },
-  { value: 4500, label: 'Stories Shared', subLabel: 'Student journeys documented', prefix: '', suffix: '+', icon: '🎬' },
-  { value: 95, label: 'Retention Rate', subLabel: 'Students continuing education', prefix: '', suffix: '%', icon: '📈' },
-];
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 export function ImpactNumbers() {
+  const locale = useLocaleStore((s) => s.locale);
+
+  const metrics = [
+    { value: 28, label: t('impact.schoolsEnrolled', locale), subLabel: t('impact.schoolsEnrolledDesc', locale), prefix: '', suffix: '', icon: '🏫' },
+    { value: 8400, label: t('impact.studentsImpacted', locale), subLabel: t('impact.studentsImpactedDesc', locale), prefix: '', suffix: '+', icon: '👨‍🎓' },
+    { value: 1.2, label: t('impact.fundsRaised', locale), subLabel: t('impact.fundsRaisedDesc', locale), prefix: '₹', suffix: 'Cr', icon: '💰', decimals: 1 },
+    { value: 120, label: t('impact.volunteersActive', locale), subLabel: t('impact.volunteersActiveDesc', locale), prefix: '', suffix: '+', icon: '🤝' },
+    { value: 4500, label: t('impact.storiesSharedLabel', locale), subLabel: t('impact.storiesSharedDesc', locale), prefix: '', suffix: '+', icon: '🎬' },
+    { value: 95, label: t('impact.retentionRate', locale), subLabel: t('impact.retentionRateDesc', locale), prefix: '', suffix: '%', icon: '📈' },
+  ];
+
   return (
     <section className="py-20 md:py-28 relative section-spotlight">
-      {/* Background glow */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent" />
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -26,19 +28,19 @@ export function ImpactNumbers() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="text-mint text-sm font-semibold uppercase tracking-wider font-mono">Our Impact</span>
+          <span className="text-mint text-sm font-semibold uppercase tracking-wider font-mono">{t('impact.label', locale)}</span>
           <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-text-primary mt-3">
-            Numbers That Matter
+            {t('impact.heading', locale)}
           </h2>
           <p className="text-text-muted mt-4 text-lg max-w-2xl mx-auto">
-            Every number represents a real child, a real story, and a real change in someone&apos;s life.
+            {t('impact.desc', locale)}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           {metrics.map((metric, idx) => (
             <motion.div
-              key={metric.label}
+              key={idx}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
