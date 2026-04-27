@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 const mentorFaqs = [
   { q: 'What should be my level of education?', a: 'At least a Bachelor\'s degree. Students in their final year of college are also welcome to apply.' },
@@ -24,6 +26,7 @@ type Step = 'form' | 'verify' | 'success';
 
 export default function ApplyPage() {
   const [step, setStep] = useState<Step>('form');
+  const locale = useLocaleStore((s) => s.locale);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -74,17 +77,17 @@ export default function ApplyPage() {
           >
             <div className="text-center mb-8">
               <h1 className="font-display font-bold text-3xl md:text-4xl text-text-primary">
-                Apply to be a Mentor
+                {t('apply.title', locale)}
               </h1>
               <p className="text-text-muted mt-2">
-                Join our team and make a difference in children&apos;s lives.
+                {t('apply.subtitle', locale)}
               </p>
               <p className="text-text-muted text-sm mt-1">
                 <Link
                   href="/careers"
                   className="text-primary hover:underline font-medium"
                 >
-                  Read the Job Description
+                  {t('apply.readJD', locale)}
                 </Link>
               </p>
             </div>
@@ -92,25 +95,25 @@ export default function ApplyPage() {
             <div className="space-y-4">
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-1.5">Full Name</label>
+                <label className="block text-sm font-medium text-text-primary mb-1.5">{t('apply.fullName', locale)}</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your full name"
+                  placeholder={t('apply.fullNamePlaceholder', locale)}
                   className="w-full px-4 py-3 rounded-xl glass text-text-primary placeholder-text-muted text-sm outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-1.5">Email</label>
+                <label className="block text-sm font-medium text-text-primary mb-1.5">{t('apply.email', locale)}</label>
                 <div className="flex gap-2">
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
+                    placeholder={t('apply.emailPlaceholder', locale)}
                     className="flex-1 px-4 py-3 rounded-xl glass text-text-primary placeholder-text-muted text-sm outline-none focus:ring-2 focus:ring-primary/20"
                   />
                   {emailVerified ? (
@@ -118,7 +121,7 @@ export default function ApplyPage() {
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      Verified
+                      {t('apply.verified', locale)}
                     </span>
                   ) : (
                     <button
@@ -126,7 +129,7 @@ export default function ApplyPage() {
                       disabled={!email.includes('@')}
                       className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-glow transition-all disabled:opacity-40"
                     >
-                      Verify
+                      {t('apply.verify', locale)}
                     </button>
                   )}
                 </div>
@@ -134,13 +137,13 @@ export default function ApplyPage() {
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-1.5">Phone Number</label>
+                <label className="block text-sm font-medium text-text-primary mb-1.5">{t('apply.phone', locale)}</label>
                 <div className="flex gap-2">
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                    placeholder="10-digit mobile number"
+                    placeholder={t('apply.phonePlaceholder', locale)}
                     className="flex-1 px-4 py-3 rounded-xl glass text-text-primary placeholder-text-muted text-sm outline-none focus:ring-2 focus:ring-primary/20"
                   />
                   {phoneVerified ? (
@@ -148,7 +151,7 @@ export default function ApplyPage() {
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
-                      Verified
+                      {t('apply.verified', locale)}
                     </span>
                   ) : (
                     <button
@@ -156,7 +159,7 @@ export default function ApplyPage() {
                       disabled={phone.length !== 10}
                       className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium hover:bg-primary-glow transition-all disabled:opacity-40"
                     >
-                      Verify
+                      {t('apply.verify', locale)}
                     </button>
                   )}
                 </div>
@@ -164,10 +167,9 @@ export default function ApplyPage() {
 
               {/* YouTube Video */}
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-1.5">Application Video</label>
+                <label className="block text-sm font-medium text-text-primary mb-1.5">{t('apply.video', locale)}</label>
                 <p className="text-text-muted text-xs mb-2">
-                  Create a 1-minute YouTube video telling us about yourself. If you&apos;d like (entirely optional),
-                  add another 1 minute about why you&apos;d like to be a mentor.
+                  {t('apply.videoHint', locale)}
                 </p>
                 <input
                   type="url"
@@ -185,7 +187,7 @@ export default function ApplyPage() {
               className="w-full"
               onClick={handleSubmit}
             >
-              Submit Application
+              {t('apply.submit', locale)}
             </Button>
           </motion.div>
         )}
@@ -197,12 +199,12 @@ export default function ApplyPage() {
             className="space-y-6"
           >
             <button onClick={() => setStep('form')} className="text-text-muted text-sm hover:text-primary flex items-center gap-1">
-              ← Back
+              {t('apply.back', locale)}
             </button>
             <div className="text-center space-y-2">
-              <h2 className="font-display font-bold text-2xl text-text-primary">Verify {verifyingField === 'email' ? 'Email' : 'Phone'}</h2>
+              <h2 className="font-display font-bold text-2xl text-text-primary">{verifyingField === 'email' ? t('apply.verifyEmail', locale) : t('apply.verifyPhone', locale)}</h2>
               <p className="text-text-muted text-sm">
-                Enter the 6-digit code sent to {verifyingField === 'email' ? email : phone}
+                {t('apply.verifyHint', locale, { target: verifyingField === 'email' ? email : phone })}
               </p>
             </div>
 
@@ -222,11 +224,11 @@ export default function ApplyPage() {
             </div>
 
             <Button variant="primary" size="lg" className="w-full" onClick={handleVerifyOtp}>
-              Verify
+              {t('apply.verify', locale)}
             </Button>
 
             <p className="text-text-muted text-xs text-center">
-              Didn&apos;t receive a code? <button className="text-primary hover:underline">Resend</button>
+              {t('apply.resend', locale)}
             </p>
           </motion.div>
         )}
@@ -249,14 +251,14 @@ export default function ApplyPage() {
             </motion.div>
 
             <h2 className="font-display font-bold text-3xl text-text-primary">
-              Application Submitted!
+              {t('apply.success.title', locale)}
             </h2>
             <p className="text-text-muted text-lg max-w-md mx-auto">
-              Thank you for your interest, {name.split(' ')[0]}! We&apos;ll review your video and get back to you soon.
+              {t('apply.success.message', locale, { name: name.split(' ')[0] })}
             </p>
 
             <Link href="/">
-              <Button variant="secondary">Back to Home</Button>
+              <Button variant="secondary">{t('apply.success.back', locale)}</Button>
             </Link>
           </motion.div>
         )}
@@ -264,8 +266,8 @@ export default function ApplyPage() {
         {/* FAQs — always visible */}
         <div className="mt-16 space-y-6">
           <div>
-            <h2 className="font-display font-bold text-2xl text-text-primary">Frequently Asked Questions</h2>
-            <p className="text-text-muted text-sm mt-1">Everything you need to know before applying.</p>
+            <h2 className="font-display font-bold text-2xl text-text-primary">{t('apply.faqTitle', locale)}</h2>
+            <p className="text-text-muted text-sm mt-1">{t('apply.faqSubtitle', locale)}</p>
           </div>
           <div className="space-y-3">
             {mentorFaqs.map((faq, i) => (

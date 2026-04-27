@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
 import { useAuthStore, MOCK_USERS } from '@/stores/authStore';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 // Design-pass role picker: maps phone prefix to role
 const ROLE_MAP: Record<string, 'admin' | 'mentor'> = {
@@ -16,6 +18,7 @@ const ROLE_MAP: Record<string, 'admin' | 'mentor'> = {
 export default function AuthPage() {
   const router  = useRouter();
   const setUser = useAuthStore((s) => s.setUser);
+  const locale = useLocaleStore((s) => s.locale);
   const [phone, setPhone] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -76,12 +79,12 @@ export default function AuthPage() {
         <GlassCard className="p-8 md:p-10" glow>
           <div className="text-center mb-8">
             <h1 className="font-display font-bold text-2xl md:text-3xl text-text-primary">
-              {otpSent ? 'Verify OTP' : 'Welcome'}
+              {otpSent ? t('auth.verifyOtp', locale) : t('auth.welcome', locale)}
             </h1>
             <p className="text-text-muted mt-2">
               {otpSent
-                ? `Enter the code sent to +91 ${phone}`
-                : 'Sign in with your phone number'}
+                ? t('auth.codeSent', locale, { phone })
+                : t('auth.signIn', locale)}
             </p>
           </div>
 
@@ -89,7 +92,7 @@ export default function AuthPage() {
             <div className="space-y-6">
               {/* Phone input */}
               <div>
-                <label className="text-text-muted text-sm mb-2 block">Phone Number</label>
+                <label className="text-text-muted text-sm mb-2 block">{t('auth.phoneLabel', locale)}</label>
                 <div className="flex gap-3">
                   <div className="glass rounded-xl px-4 py-3 flex items-center gap-2 shrink-0">
                     <span className="text-lg">🇮🇳</span>
@@ -99,7 +102,7 @@ export default function AuthPage() {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                    placeholder="Enter phone number"
+                    placeholder={t('auth.enterPhone', locale)}
                     className="flex-1 px-4 py-3 rounded-xl glass text-text-primary placeholder-text-muted outline-none font-mono text-lg tracking-wider"
                     autoFocus
                   />
@@ -112,7 +115,7 @@ export default function AuthPage() {
                   type="checkbox"
                   className="w-5 h-5 rounded border-border accent-mint"
                 />
-                <span className="text-text-muted text-sm">Send code via WhatsApp instead</span>
+                <span className="text-text-muted text-sm">{t('auth.whatsapp', locale)}</span>
               </label>
 
               <Button
@@ -122,7 +125,7 @@ export default function AuthPage() {
                 onClick={handleSendOTP}
                 disabled={phone.length < 10}
               >
-                Send OTP
+                {t('auth.sendOtp', locale)}
               </Button>
             </div>
           ) : (
@@ -149,14 +152,14 @@ export default function AuthPage() {
               <div className="text-center">
                 {countdown > 0 ? (
                   <p className="text-text-muted text-sm">
-                    Resend in <span className="text-primary font-mono">{countdown}s</span>
+                    {t('auth.resendIn', locale, { sec: String(countdown) })}
                   </p>
                 ) : (
                   <button
                     onClick={handleSendOTP}
                     className="text-primary text-sm font-medium hover:text-primary-glow transition-colors"
                   >
-                    Resend OTP
+                    {t('auth.resendOtp', locale)}
                   </button>
                 )}
               </div>
@@ -173,20 +176,20 @@ export default function AuthPage() {
                 }}
                 disabled={otp.some(d => !d)}
               >
-                Verify & Login
+                {t('auth.verifyLogin', locale)}
               </Button>
 
               <button
                 onClick={() => { setOtpSent(false); setOtp(['', '', '', '', '', '']); }}
                 className="w-full text-center text-text-muted text-sm hover:text-primary transition-colors"
               >
-                Change phone number
+                {t('auth.changePhone', locale)}
               </button>
             </div>
           )}
 
           <p className="text-text-muted text-xs text-center mt-8">
-            By continuing, you agree to our Terms of Service and Privacy Policy
+            {t('auth.terms', locale)}
           </p>
         </GlassCard>
       </motion.div>

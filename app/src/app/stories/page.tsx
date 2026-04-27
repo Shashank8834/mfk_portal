@@ -9,6 +9,8 @@ import { schools } from '@/data/schools';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
 import { displayName } from '@/lib/utils';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 type FilterBy = 'all' | string; // school id or 'all'
 type SortBy = 'trending' | 'recent' | 'name';
@@ -17,6 +19,7 @@ export default function StoriesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [schoolFilter, setSchoolFilter] = useState<FilterBy>('all');
   const [sortBy, setSortBy] = useState<SortBy>('trending');
+  const locale = useLocaleStore((s) => s.locale);
 
   const filteredStudents = useMemo(() => {
     let result = [...students];
@@ -65,10 +68,10 @@ export default function StoriesPage() {
           className="mb-8"
         >
           <h1 className="font-display font-bold text-3xl md:text-4xl text-text-primary">
-            Student Stories
+            {t('stories.title', locale)}
           </h1>
           <p className="text-text-muted mt-2 text-lg">
-            Every student has a story. Watch their journeys unfold.
+            {t('stories.subtitle', locale)}
           </p>
         </motion.div>
 
@@ -90,8 +93,8 @@ export default function StoriesPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by student name or school..."
-                aria-label="Search student stories"
+                placeholder={t('stories.search', locale)}
+                aria-label={t('stories.search', locale)}
                 className="w-full pl-12 pr-4 py-3 rounded-xl glass focus:border-primary/40 text-text-primary placeholder-text-muted text-sm outline-none transition-colors"
               />
             </div>
@@ -99,9 +102,9 @@ export default function StoriesPage() {
             {/* Sort */}
             <div className="flex gap-2">
               {([
-                { value: 'trending' as SortBy, label: '🔥 Trending' },
-                { value: 'recent' as SortBy, label: '🕐 Recent' },
-                { value: 'name' as SortBy, label: 'A–Z' },
+                { value: 'trending' as SortBy, label: t('stories.trending', locale) },
+                { value: 'recent' as SortBy, label: t('stories.recent', locale) },
+                { value: 'name' as SortBy, label: t('stories.az', locale) },
               ]).map((s) => (
                 <button
                   key={s.value}
@@ -128,7 +131,7 @@ export default function StoriesPage() {
                   : 'glass text-text-muted hover:text-text-primary'
               }`}
             >
-              All Schools
+              {t('stories.allSchools', locale)}
             </button>
             {schools.slice(0, 10).map((school) => (
               <button
@@ -245,8 +248,8 @@ export default function StoriesPage() {
                 <path d="m21 21-4.35-4.35" />
               </svg>
             </div>
-            <p className="text-text-muted text-lg">No students found.</p>
-            <p className="text-text-muted text-sm mt-1">Try adjusting your search or filters.</p>
+            <p className="text-text-muted text-lg">{t('stories.noResults', locale)}</p>
+            <p className="text-text-muted text-sm mt-1">{t('stories.noResultsHint', locale)}</p>
           </div>
         )}
       </div>

@@ -12,6 +12,8 @@ import { GlassCard } from '@/components/ui/GlassCard';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { School } from '@/types';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 /* ── Lazy-load Google Map (never bundled if key is empty) ── */
 const GoogleMapView = dynamic(() => import('@/components/GoogleMapView'), {
@@ -91,6 +93,7 @@ function FallbackMap({ clusters, onClusterClick }: { clusters: Cluster[]; onClus
 
 export default function MapPage() {
   const clusters = useMemo(() => buildClusters(), []);
+  const locale = useLocaleStore((s) => s.locale);
   const [activeCluster, setActiveCluster] = useState<Cluster | null>(null);
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -143,7 +146,7 @@ export default function MapPage() {
             <p className="text-sm text-text-muted leading-relaxed">{selectedSchool.description}</p>
             {students.length > 0 && (
               <div>
-                <p className="text-sm text-text-muted mb-2">Students</p>
+                <p className="text-sm text-text-muted mb-2">{t('map.detail.students', locale)}</p>
                 <div className="flex gap-2">
                   {students.map((student) => (
                     <Link key={student.id} href={`/students/${student.id}`}>
@@ -157,8 +160,8 @@ export default function MapPage() {
               </div>
             )}
             <div className="flex gap-3 pt-2">
-              <Link href={`/schools/${selectedSchool.id}`} className="flex-1"><Button variant="primary" size="sm" className="w-full">View School</Button></Link>
-              <Link href="/donate" className="flex-1"><Button variant="gold" size="sm" className="w-full">Donate</Button></Link>
+              <Link href={`/schools/${selectedSchool.id}`} className="flex-1"><Button variant="primary" size="sm" className="w-full">{t('map.viewSchool', locale)}</Button></Link>
+              <Link href="/donate" className="flex-1"><Button variant="gold" size="sm" className="w-full">{t('map.donate', locale)}</Button></Link>
             </div>
           </GlassCard>
         </motion.div>
@@ -170,12 +173,12 @@ export default function MapPage() {
         <motion.div key="cluster-schools" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-3">
           <button onClick={handleBack} className="flex items-center gap-2 text-sm text-primary hover:text-primary-glow transition-colors mb-2">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m15 18-6-6 6-6" /></svg>
-            All clusters
+            {t('map.allClusters', locale)}
           </button>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-4 h-4 rounded-full shrink-0" style={{ backgroundColor: activeCluster.color }} />
             <h3 className="font-display font-bold text-lg text-text-primary">{activeCluster.name}</h3>
-            <span className="text-xs text-text-muted">({activeCluster.schools.length} schools)</span>
+            <span className="text-xs text-text-muted">({activeCluster.schools.length} {t('map.schools', locale)})</span>
           </div>
           {activeCluster.schools.map((school, idx) => (
             <motion.div key={school.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.04 }}>
@@ -197,7 +200,7 @@ export default function MapPage() {
 
     return (
       <motion.div key="clusters-list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
-        <p className="text-sm text-text-muted">Click a cluster on the map or below to explore schools in that zone.</p>
+        <p className="text-sm text-text-muted">{t('map.hint', locale)}</p>
         {clusters.map((cluster) => (
           <button key={cluster.id} onClick={() => handleClusterClick(cluster)} className="w-full text-left">
             <GlassCard className="p-5 space-y-2">
@@ -206,22 +209,22 @@ export default function MapPage() {
                 <h3 className="font-display font-bold text-text-primary">{cluster.name}</h3>
               </div>
               <div className="flex items-center justify-between text-sm text-text-muted pl-8">
-                <span>{cluster.schools.length} schools</span>
-                <span>{cluster.schools.reduce((s, sc) => s + sc.studentCount, 0)} students</span>
+                <span>{cluster.schools.length} {t('map.schools', locale)}</span>
+                <span>{cluster.schools.reduce((s, sc) => s + sc.studentCount, 0)} {t('map.students', locale)}</span>
               </div>
             </GlassCard>
           </button>
         ))}
       </motion.div>
     );
-  }, [activeCluster, selectedSchool, clusters, handleBack, handleClusterClick, handleSchoolClick]);
+  }, [activeCluster, selectedSchool, clusters, handleBack, handleClusterClick, handleSchoolClick, locale]);
 
   return (
     <div className="pt-20 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <h1 className="font-display font-bold text-3xl md:text-4xl text-text-primary">School Map</h1>
-          <p className="text-text-muted mt-2 text-lg">Explore {schools.length} government schools across Bangalore</p>
+          <h1 className="font-display font-bold text-3xl md:text-4xl text-text-primary">{t('map.title', locale)}</h1>
+          <p className="text-text-muted mt-2 text-lg">{t('map.subtitle', locale, { count: String(schools.length) })}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

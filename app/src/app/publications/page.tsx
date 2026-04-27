@@ -3,8 +3,11 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { allBooks } from '@/data/books';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 export default function PublicationsPage() {
+  const locale = useLocaleStore((s) => s.locale);
   return (
     <div className="min-h-screen bg-bg-deep pt-28 pb-20 px-4">
       <div className="max-w-4xl mx-auto">
@@ -14,11 +17,10 @@ export default function PublicationsPage() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="font-display text-4xl md:text-5xl font-bold text-text-primary mb-3">
-            Publications
+            {t('publications.title', locale)}
           </h1>
           <p className="text-text-muted text-lg mb-12 max-w-2xl">
-            Read, highlight, and discuss. Our publications are open for everyone
-            to explore and engage with.
+            {t('publications.subtitle', locale)}
           </p>
         </motion.div>
 
@@ -42,7 +44,7 @@ export default function PublicationsPage() {
                         </svg>
                       </div>
                       <span className="text-xs text-text-muted font-medium uppercase tracking-wider group-hover:opacity-0 transition-opacity duration-200">
-                        {book.chapters.length} Chapters
+                        {t('publications.chapters', locale, { count: String(book.chapters.length) })}
                       </span>
                       {/* Play overlay on hover */}
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-primary/10">
@@ -51,7 +53,7 @@ export default function PublicationsPage() {
                             <polygon points="8,5 19,12 8,19" />
                           </svg>
                         </div>
-                        <span className="text-primary text-xs font-semibold">Watch Video</span>
+                        <span className="text-primary text-xs font-semibold">{t('publications.watchVideo', locale)}</span>
                       </div>
                     </div>
 

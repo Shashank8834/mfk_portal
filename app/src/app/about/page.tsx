@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 
 const sectionAnim = {
@@ -13,48 +15,36 @@ const sectionAnim = {
   transition: { duration: 0.6 },
 };
 
-const dailyHabits = [
-  'Wake up on time independently',
-  'Make the bed and clean the room',
-  'Show respect — touch parents\' feet and take blessings',
-  'Prepare and serve tea to parents',
-  'Exercise vigorously — running, skipping, yoga',
-  'Make and eat your own breakfast',
-  'Pack snacks and water bottle for school',
-  'Be ready 10 minutes before departure',
-  'Read the newspaper for 10 minutes before school',
-  'After school — shower and rinse clothes in water',
-  'Prepare and eat an evening snack',
-  'Eat five meals daily',
-  'At least 1 hour of vigorous physical play',
-];
-
-const studyRoutine = [
-  { step: '1', title: 'Read', desc: 'Read the chapter from the textbook.' },
-  { step: '2', title: 'Watch', desc: 'Watch YouTube videos — first in native language for concepts, then in English for terminology.' },
-  { step: '3', title: 'Re-read', desc: 'Re-read the chapter with deeper comprehension.' },
-  { step: '4', title: 'Solve', desc: 'Solve all sample problems and exercises in the notebook — every single one.' },
-];
-
-const rewardTiers = [
-  { condition: 'Full compliance', foundation: '₹250', parent: '₹250', total: '₹750' },
-  { condition: 'One absence/late', foundation: '₹125', parent: '₹250', total: '₹500' },
-  { condition: 'Two absences/late', foundation: '₹62.50', parent: '₹250', total: '₹375' },
-  { condition: 'Further infractions', foundation: 'Halved each time', parent: '₹250', total: 'Varies' },
-];
-
 export default function AboutPage() {
+  const locale = useLocaleStore((s) => s.locale);
+
+  const dailyHabits = t('about.habits', locale).split('|');
+
+  const studyRoutine = [
+    { step: '1', title: t('about.study.1.title', locale), desc: t('about.study.1.desc', locale) },
+    { step: '2', title: t('about.study.2.title', locale), desc: t('about.study.2.desc', locale) },
+    { step: '3', title: t('about.study.3.title', locale), desc: t('about.study.3.desc', locale) },
+    { step: '4', title: t('about.study.4.title', locale), desc: t('about.study.4.desc', locale) },
+  ];
+
+  const rewardTiers = [
+    { condition: t('about.tier.full', locale), foundation: '₹250', parent: '₹250', total: '₹750' },
+    { condition: t('about.tier.one', locale), foundation: '₹125', parent: '₹250', total: '₹500' },
+    { condition: t('about.tier.two', locale), foundation: '₹62.50', parent: '₹250', total: '₹375' },
+    { condition: t('about.tier.further', locale), foundation: t('about.tier.halved', locale), parent: '₹250', total: t('about.tier.varies', locale) },
+  ];
+
   return (
     <div className="min-h-screen pt-28 pb-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
         {/* Page Header */}
         <motion.div {...sectionAnim} className="text-center space-y-4">
-          <span className="text-gold text-sm font-semibold uppercase tracking-wider font-mono">About Us</span>
+          <span className="text-gold text-sm font-semibold uppercase tracking-wider font-mono">{t('about.badge', locale)}</span>
           <h1 className="font-display font-extrabold text-4xl md:text-5xl lg:text-6xl text-text-primary">
-            Financial Literacy for Every Child
+            {t('about.title', locale)}
           </h1>
           <p className="text-text-muted text-lg md:text-xl max-w-2xl mx-auto text-balance">
-            We teach underprivileged schoolchildren the value of discipline, good habits, and money management — one journal entry at a time.
+            {t('about.subtitle', locale)}
           </p>
         </motion.div>
 
@@ -62,15 +52,15 @@ export default function AboutPage() {
         <motion.section {...sectionAnim} id="what-we-do" className="scroll-mt-24 space-y-8">
           <div>
             <span className="text-mint text-sm font-semibold uppercase tracking-wider font-mono">01</span>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">What we do</h2>
+            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">{t('about.whatWeDo', locale)}</h2>
           </div>
 
           <div className="space-y-6">
             <p className="text-text-muted text-lg leading-relaxed max-w-3xl">
-              Our program has four primary goals: develop good daily habits, cultivate the habit of earning money, encourage saving, and teach how to grow money through investment. Alongside this, we improve spoken English and introduce effective study methods for academic success.
+              {t('about.whatP1', locale)}
             </p>
             <p className="text-text-muted text-lg leading-relaxed max-w-3xl">
-              Students maintain a daily register documenting their tasks, which is submitted to the class teacher each day for review. Consistent completion of tasks and homework earns monthly rewards — ₹250 from the foundation, invested directly into a mutual fund (Large Cap Stock ELSS). If parents contribute ₹250 into their child&apos;s savings account, we double our reward to ₹500, bringing the total monthly investment up to ₹750.
+              {t('about.whatP2', locale)}
             </p>
 
             {/* YouTube Video Embed */}
@@ -88,15 +78,15 @@ export default function AboutPage() {
 
             {/* Monthly Reward Table */}
             <GlassCard className="p-6 space-y-4">
-              <h3 className="font-display font-bold text-lg text-text-primary">Monthly Award System</h3>
+              <h3 className="font-display font-bold text-lg text-text-primary">{t('about.rewardTitle', locale)}</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="text-left py-3 pr-4 text-text-muted font-medium">Condition</th>
-                      <th className="text-right py-3 px-4 text-text-muted font-medium">Foundation</th>
-                      <th className="text-right py-3 px-4 text-text-muted font-medium">Parent</th>
-                      <th className="text-right py-3 pl-4 text-mint font-medium">Total/mo</th>
+                      <th className="text-left py-3 pr-4 text-text-muted font-medium">{t('about.col.condition', locale)}</th>
+                      <th className="text-right py-3 px-4 text-text-muted font-medium">{t('about.col.foundation', locale)}</th>
+                      <th className="text-right py-3 px-4 text-text-muted font-medium">{t('about.col.parent', locale)}</th>
+                      <th className="text-right py-3 pl-4 text-mint font-medium">{t('about.col.total', locale)}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -111,7 +101,7 @@ export default function AboutPage() {
                   </tbody>
                 </table>
               </div>
-              <p className="text-text-muted text-xs">If parents contribute ₹250 into their Savings Account, we double our reward to Rs. 500 in Mutual Funds.</p>
+              <p className="text-text-muted text-xs">{t('about.rewardNote', locale)}</p>
             </GlassCard>
           </div>
         </motion.section>
@@ -120,14 +110,14 @@ export default function AboutPage() {
         <motion.section {...sectionAnim} id="how-we-do-it" className="scroll-mt-24 space-y-8">
           <div>
             <span className="text-mint text-sm font-semibold uppercase tracking-wider font-mono">02</span>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">How we do it</h2>
+            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">{t('about.howWeDoIt', locale)}</h2>
           </div>
 
           {/* Daily Habits */}
           <div className="space-y-4">
-            <h3 className="font-display font-bold text-xl text-text-primary">Daily Habit Tracking</h3>
+            <h3 className="font-display font-bold text-xl text-text-primary">{t('about.habitTitle', locale)}</h3>
             <p className="text-text-muted text-base leading-relaxed">
-              Students maintain a register documenting these tasks every morning. The register is submitted to the class teacher for review and initials. Our Mentors also review it thrice a week and upload a PDF to our portal for documentation and AI analysis.
+              {t('about.habitDesc', locale)}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 sm:grid-flow-col sm:grid-rows-7 gap-3">
               {dailyHabits.map((habit) => (
@@ -145,7 +135,7 @@ export default function AboutPage() {
 
           {/* Study Routine */}
           <div className="space-y-4">
-            <h3 className="font-display font-bold text-xl text-text-primary">Study Routine (6 PM – 9 PM)</h3>
+            <h3 className="font-display font-bold text-xl text-text-primary">{t('about.studyTitle', locale)}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {studyRoutine.map((item) => (
                 <GlassCard key={item.step} className="p-6 space-y-3">
@@ -161,14 +151,14 @@ export default function AboutPage() {
 
           {/* Spoken English */}
           <div className="space-y-4">
-            <h3 className="font-display font-bold text-xl text-text-primary">Spoken Language Training</h3>
-            <p className="text-text-muted text-sm font-medium">Languages: English, Hindi and Kannada</p>
+            <h3 className="font-display font-bold text-xl text-text-primary">{t('about.spokenTitle', locale)}</h3>
+            <p className="text-text-muted text-sm font-medium">{t('about.spokenLangs', locale)}</p>
             <GlassCard className="p-6 space-y-3">
               <p className="text-text-muted text-base leading-relaxed">
-                Dedicated sessions after school (3:00 PM – 4:30 PM) focused on spoken language skills. Students read simple books using a dictionary, write down difficult words, and practice in groups of 3 to develop speaking and listening skills.
+                {t('about.spokenP1', locale)}
               </p>
               <p className="text-text-muted text-base leading-relaxed">
-                A mentor visits on alternate days to participate in these Group Discussions. Parental involvement is encouraged during mentor visits. Non-participation results in absence marking from the program.
+                {t('about.spokenP2', locale)}
               </p>
             </GlassCard>
           </div>
@@ -178,17 +168,13 @@ export default function AboutPage() {
         <motion.section {...sectionAnim} id="mentors" className="scroll-mt-24 space-y-8">
           <div>
             <span className="text-mint text-sm font-semibold uppercase tracking-wider font-mono">03</span>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">Mentors</h2>
-            <p className="text-text-muted text-lg mt-3">Our interns who work directly with the students every day.</p>
+            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">{t('about.mentors', locale)}</h2>
+            <p className="text-text-muted text-lg mt-3">{t('about.mentorsSubtitle', locale)}</p>
           </div>
 
           <GlassCard className="p-6 space-y-3">
             <p className="text-text-muted text-base leading-relaxed">
-              Paid interns who are dedicated to a school and visit thrice a week. From 2–3 PM, they check all the journals and upload to our portal.
-              From 3–4:30, they help the students improve their spoken language skills by participating in group discussions, giving tips, and recognising great performances.
-              Then they interact with visiting parents, videotape their observations and concerns, and upload to the portal.
-              If parents invite, they also visit student homes to capture their context, videotaping and uploading.
-              If there are pressing needs (e.g. table is broken, they need a lamp or chair), they upload it to the portal.
+              {t('about.mentorDesc', locale)}
             </p>
           </GlassCard>
 
@@ -202,7 +188,7 @@ export default function AboutPage() {
                   </svg>
                 </div>
                 <h3 className="font-display font-bold text-text-primary">{name}</h3>
-                <p className="text-text-muted text-sm">Program Intern</p>
+                <p className="text-text-muted text-sm">{t('about.intern', locale)}</p>
               </GlassCard>
             ))}
           </div>
@@ -217,9 +203,9 @@ export default function AboutPage() {
                 <line x1="23" y1="11" x2="17" y2="11" />
               </svg>
             </div>
-            <h3 className="font-display font-bold text-2xl text-text-primary">We&apos;re Hiring!</h3>
+            <h3 className="font-display font-bold text-2xl text-text-primary">{t('about.hiring', locale)}</h3>
             <p className="text-text-muted text-base max-w-lg mx-auto">
-              Join our team of mentors and make a direct impact on children&apos;s lives. Paid internship with travel reimbursement.
+              {t('about.hiringDesc', locale)}
             </p>
             <p className="text-text-muted text-sm">
               <a
@@ -235,12 +221,12 @@ export default function AboutPage() {
                   <line x1="16" y1="17" x2="8" y2="17" />
                   <polyline points="10 9 9 9 8 9" />
                 </svg>
-                Read the Full Job Description
+                {t('about.readJD', locale)}
               </a>
             </p>
             <Link href="/apply">
               <Button variant="gold" size="lg">
-                Apply Now
+                {t('about.applyNow', locale)}
               </Button>
             </Link>
           </GlassCard>
@@ -250,7 +236,7 @@ export default function AboutPage() {
         <motion.section {...sectionAnim} id="partners" className="scroll-mt-24 space-y-8">
           <div>
             <span className="text-mint text-sm font-semibold uppercase tracking-wider font-mono">04</span>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">Partners</h2>
+            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">{t('about.partners', locale)}</h2>
           </div>
 
           <GlassCard className="p-6 flex items-center gap-6">
@@ -262,7 +248,7 @@ export default function AboutPage() {
             </div>
             <div>
               <h3 className="font-display font-bold text-lg text-text-primary">Zerodha</h3>
-              <p className="text-text-muted text-sm">Investment partner enabling mutual fund accounts (Large Cap Stock ELSS) for students. Every month, ₹250 from the foundation is invested directly into each student&apos;s account.</p>
+              <p className="text-text-muted text-sm">{t('about.zerodhaDesc', locale)}</p>
             </div>
           </GlassCard>
         </motion.section>
@@ -271,7 +257,7 @@ export default function AboutPage() {
         <motion.section {...sectionAnim} id="volunteers" className="scroll-mt-24 space-y-8">
           <div>
             <span className="text-mint text-sm font-semibold uppercase tracking-wider font-mono">05</span>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">Volunteers</h2>
+            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">{t('about.volunteers', locale)}</h2>
           </div>
 
           <GlassCard className="p-6 flex items-center gap-6">
@@ -284,8 +270,8 @@ export default function AboutPage() {
               </svg>
             </div>
             <div>
-              <h3 className="font-display font-bold text-lg text-text-primary">Community Volunteers</h3>
-              <p className="text-text-muted text-sm">Friends and family members who dedicate a couple of hours each week to mentor students, support language learning sessions, and help with program activities.</p>
+              <h3 className="font-display font-bold text-lg text-text-primary">{t('about.communityVol', locale)}</h3>
+              <p className="text-text-muted text-sm">{t('about.volDesc', locale)}</p>
             </div>
           </GlassCard>
         </motion.section>
@@ -294,31 +280,31 @@ export default function AboutPage() {
         <motion.section {...sectionAnim} id="technology" className="scroll-mt-24 space-y-8">
           <div>
             <span className="text-mint text-sm font-semibold uppercase tracking-wider font-mono">06</span>
-            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">Technology</h2>
+            <h2 className="font-display font-bold text-3xl md:text-4xl text-text-primary mt-2">{t('about.technology', locale)}</h2>
           </div>
 
           <GlassCard className="p-8 space-y-6">
             <p className="text-text-muted text-lg leading-relaxed">
-              This portal is built with modern web technologies to provide a seamless experience for students, mentors, and donors. Our architecture is designed for scale and reliability, ensuring every student&apos;s story and progress is tracked accurately.
+              {t('about.techDesc', locale)}
             </p>
 
             {/* Tech Stack Diagram */}
             <div className="rounded-2xl border border-border bg-bg-elevated/50 p-6 space-y-6">
-              <h4 className="font-display font-bold text-base text-text-primary text-center">Technology Stack</h4>
+              <h4 className="font-display font-bold text-base text-text-primary text-center">{t('about.techStack', locale)}</h4>
 
               {/* Frontend Layer */}
               <div className="space-y-2">
-                <span className="text-xs font-semibold text-primary uppercase tracking-wider">Frontend</span>
+                <span className="text-xs font-semibold text-primary uppercase tracking-wider">{t('about.frontend', locale)}</span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {[
                     { name: 'Next.js 16', desc: 'App Router' },
                     { name: 'React 19', desc: 'UI Library' },
                     { name: 'TypeScript', desc: 'Type Safety' },
                     { name: 'Tailwind CSS', desc: 'Styling' },
-                  ].map((t) => (
-                    <div key={t.name} className="text-center px-3 py-3 rounded-xl bg-bg-card border border-border">
-                      <span className="text-sm font-mono text-primary font-medium block">{t.name}</span>
-                      <span className="text-xs text-text-muted">{t.desc}</span>
+                  ].map((tech) => (
+                    <div key={tech.name} className="text-center px-3 py-3 rounded-xl bg-bg-card border border-border">
+                      <span className="text-sm font-mono text-primary font-medium block">{tech.name}</span>
+                      <span className="text-xs text-text-muted">{tech.desc}</span>
                     </div>
                   ))}
                 </div>
@@ -333,17 +319,17 @@ export default function AboutPage() {
 
               {/* Backend Layer */}
               <div className="space-y-2">
-                <span className="text-xs font-semibold text-accent uppercase tracking-wider">Backend &amp; Services</span>
+                <span className="text-xs font-semibold text-accent uppercase tracking-wider">{t('about.backend', locale)}</span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {[
                     { name: 'Firebase', desc: 'Auth & DB' },
                     { name: 'UPI', desc: 'Payments' },
                     { name: 'Cloudinary', desc: 'Media CDN' },
                     { name: 'Google Maps', desc: 'Geolocation' },
-                  ].map((t) => (
-                    <div key={t.name} className="text-center px-3 py-3 rounded-xl bg-bg-card border border-border">
-                      <span className="text-sm font-mono text-accent font-medium block">{t.name}</span>
-                      <span className="text-xs text-text-muted">{t.desc}</span>
+                  ].map((tech) => (
+                    <div key={tech.name} className="text-center px-3 py-3 rounded-xl bg-bg-card border border-border">
+                      <span className="text-sm font-mono text-accent font-medium block">{tech.name}</span>
+                      <span className="text-xs text-text-muted">{tech.desc}</span>
                     </div>
                   ))}
                 </div>
@@ -358,16 +344,16 @@ export default function AboutPage() {
 
               {/* Infrastructure */}
               <div className="space-y-2">
-                <span className="text-xs font-semibold text-mint uppercase tracking-wider">Infrastructure</span>
+                <span className="text-xs font-semibold text-mint uppercase tracking-wider">{t('about.infrastructure', locale)}</span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {[
                     { name: 'Vercel', desc: 'Hosting & CDN' },
                     { name: 'GitHub', desc: 'Version Control' },
                     { name: 'Analytics', desc: 'Usage Insights' },
-                  ].map((t) => (
-                    <div key={t.name} className="text-center px-3 py-3 rounded-xl bg-bg-card border border-border">
-                      <span className="text-sm font-mono text-mint font-medium block">{t.name}</span>
-                      <span className="text-xs text-text-muted">{t.desc}</span>
+                  ].map((tech) => (
+                    <div key={tech.name} className="text-center px-3 py-3 rounded-xl bg-bg-card border border-border">
+                      <span className="text-sm font-mono text-mint font-medium block">{tech.name}</span>
+                      <span className="text-xs text-text-muted">{tech.desc}</span>
                     </div>
                   ))}
                 </div>
@@ -385,9 +371,9 @@ export default function AboutPage() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="font-display font-bold text-lg text-text-primary group-hover:text-primary transition-colors">Technology Lead</h3>
-                <p className="text-text-muted text-sm mt-1">Built and maintains the MFK portal — from architecture to deployment.</p>
-                <p className="text-primary text-xs font-medium mt-2">View Profile →</p>
+                <h3 className="font-display font-bold text-lg text-text-primary group-hover:text-primary transition-colors">{t('about.techLead', locale)}</h3>
+                <p className="text-text-muted text-sm mt-1">{t('about.techLeadDesc', locale)}</p>
+                <p className="text-primary text-xs font-medium mt-2">{t('about.viewProfile', locale)}</p>
               </div>
               <svg className="text-text-muted group-hover:text-primary transition-colors shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 18l6-6-6-6" />
@@ -403,14 +389,14 @@ export default function AboutPage() {
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
               </div>
-              <h3 className="font-display font-bold text-xl text-text-primary">Security &amp; Privacy</h3>
+              <h3 className="font-display font-bold text-xl text-text-primary">{t('about.security', locale)}</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { title: 'Data Encryption', desc: 'All data is encrypted in transit (TLS 1.3) and at rest. Student information is never exposed publicly.' },
-                { title: 'OTP Authentication', desc: 'Phone-based OTP verification ensures only authorized users access student data and donation records.' },
-                { title: 'Minimal Data Collection', desc: 'We collect only what is necessary. No tracking cookies, no third-party data sharing, no ad networks.' },
-                { title: 'Direct UPI Payments', desc: 'Donations are processed via UPI QR code — no card details collected, no intermediary storing sensitive data.' },
+                { title: t('about.sec.encrypt.title', locale), desc: t('about.sec.encrypt.desc', locale) },
+                { title: t('about.sec.otp.title', locale), desc: t('about.sec.otp.desc', locale) },
+                { title: t('about.sec.minimal.title', locale), desc: t('about.sec.minimal.desc', locale) },
+                { title: t('about.sec.upi.title', locale), desc: t('about.sec.upi.desc', locale) },
               ].map((item) => (
                 <div key={item.title} className="flex items-start gap-3 px-4 py-3 rounded-xl bg-bg-elevated/50 border border-border/50">
                   <span className="text-mint mt-0.5 shrink-0">

@@ -21,12 +21,15 @@ import { Button } from '@/components/ui/Button';
 import { students as allStudents } from '@/data/students';
 import { schools } from '@/data/schools';
 import { displayName } from '@/lib/utils';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 type DonationType = 'student' | 'school' | 'general';
 type Step = 1 | 2 | 3 | 4;
 
 export default function DonatePage() {
   const searchParams = useSearchParams();
+  const locale = useLocaleStore((s) => s.locale);
   const [step, setStep] = useState<Step>(1);
   const [donationType, setDonationType] = useState<DonationType | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -78,15 +81,15 @@ export default function DonatePage() {
           >
             <div className="text-center mb-8">
               <h1 className="font-display font-bold text-3xl md:text-4xl text-text-primary">
-                Make a Difference
+                {t('donate.title', locale)}
               </h1>
-              <p className="text-text-muted mt-3 text-base">Choose how you&apos;d like to contribute</p>
+              <p className="text-text-muted mt-3 text-base">{t('donate.subtitle', locale)}</p>
             </div>
 
             {[
-              { type: 'student' as DonationType, icon: '👨‍🎓', title: 'Sponsor a Student', desc: 'Fund education, supplies, and activities for a specific student' },
-              { type: 'school' as DonationType, icon: '🏫', title: 'Fund a School', desc: 'Support an entire school with infrastructure and program funding' },
-              { type: 'general' as DonationType, icon: '💝', title: 'General Donation', desc: 'Contribute to the MFK Foundation\'s overall mission' },
+              { type: 'student' as DonationType, icon: '👨‍🎓', title: t('donate.student.title', locale), desc: t('donate.student.desc', locale) },
+              { type: 'school' as DonationType, icon: '🏫', title: t('donate.school.title', locale), desc: t('donate.school.desc', locale) },
+              { type: 'general' as DonationType, icon: '💝', title: t('donate.general.title', locale), desc: t('donate.general.desc', locale) },
             ].map((option) => (
               <button
                 key={option.type}
@@ -116,18 +119,18 @@ export default function DonatePage() {
             className="space-y-6"
           >
             <button onClick={() => setStep(1)} className="text-text-muted text-sm hover:text-primary flex items-center gap-1">
-              ← Back
+              {t('donate.back', locale)}
             </button>
             <h2 className="font-display font-bold text-2xl text-text-primary">
-              {donationType === 'student' ? 'Select a Student' : 'Select a School'}
+              {donationType === 'student' ? t('donate.selectStudent', locale) : t('donate.selectSchool', locale)}
             </h2>
 
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search ${donationType === 'student' ? 'students' : 'schools'}...`}
-              aria-label={`Search ${donationType === 'student' ? 'students' : 'schools'}`}
+              placeholder={donationType === 'student' ? t('donate.searchStudents', locale) : t('donate.searchSchools', locale)}
+              aria-label={donationType === 'student' ? t('donate.searchStudents', locale) : t('donate.searchSchools', locale)}
               className="w-full px-4 py-3 rounded-xl glass text-text-primary placeholder-text-muted text-sm outline-none"
             />
 
@@ -148,9 +151,9 @@ export default function DonatePage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-text-primary truncate">{displayName(student.name)}</p>
-                          <p className="text-xs text-text-muted">{student.schoolName} · Grade {student.grade}</p>
+                          <p className="text-xs text-text-muted">{student.schoolName} · {t('donate.grade', locale, { grade: String(student.grade) })}</p>
                         </div>
-                        <Badge variant="gold" size="sm">Grade {student.grade}</Badge>
+                        <Badge variant="gold" size="sm">{t('donate.grade', locale, { grade: String(student.grade) })}</Badge>
                       </GlassCard>
                     </button>
                   ))
@@ -168,9 +171,9 @@ export default function DonatePage() {
                         <div className="w-10 h-10 rounded-lg bg-bg-elevated flex items-center justify-center text-lg">🏫</div>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-text-primary truncate">{school.name}</p>
-                          <p className="text-xs text-text-muted">{school.studentCount} students</p>
+                          <p className="text-xs text-text-muted">{t('donate.studentsCount', locale, { count: String(school.studentCount) })}</p>
                         </div>
-                        <Badge variant="primary" size="sm">{school.studentCount} students</Badge>
+                        <Badge variant="primary" size="sm">{t('donate.studentsCount', locale, { count: String(school.studentCount) })}</Badge>
                       </GlassCard>
                     </button>
                   ))
@@ -187,25 +190,25 @@ export default function DonatePage() {
             className="space-y-6"
           >
             <button onClick={() => setStep(donationType === 'general' ? 1 : 2)} className="text-text-muted text-sm hover:text-primary flex items-center gap-1">
-              ← Back
+              {t('donate.back', locale)}
             </button>
-            <h2 className="font-display font-bold text-2xl text-text-primary">Scan & Pay</h2>
+            <h2 className="font-display font-bold text-2xl text-text-primary">{t('donate.scanPay', locale)}</h2>
 
             {/* Donation summary */}
             <GlassCard className="p-5 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-text-muted text-sm">Type</span>
-                <span className="text-text-primary text-sm font-medium capitalize">{donationType} donation</span>
+                <span className="text-text-muted text-sm">{t('donate.typeLabel', locale)}</span>
+                <span className="text-text-primary text-sm font-medium capitalize">{t('donate.donation', locale, { type: donationType ?? '' })}</span>
               </div>
               {selectedStudent && (
                 <div className="flex items-center justify-between border-t border-border pt-3">
-                  <span className="text-text-muted text-sm">Student</span>
+                  <span className="text-text-muted text-sm">{t('donate.studentLabel', locale)}</span>
                   <span className="text-text-primary text-sm font-medium">{displayName(selectedStudent.name)}</span>
                 </div>
               )}
               {selectedSchool && (
                 <div className="flex items-center justify-between border-t border-border pt-3">
-                  <span className="text-text-muted text-sm">School</span>
+                  <span className="text-text-muted text-sm">{t('donate.schoolLabel', locale)}</span>
                   <span className="text-text-primary text-sm font-medium">{selectedSchool.name}</span>
                 </div>
               )}
@@ -213,7 +216,7 @@ export default function DonatePage() {
 
             {/* QR Code */}
             <GlassCard className="p-8 text-center space-y-5" glow>
-              <p className="text-text-muted text-sm font-medium">Scan to pay via UPI</p>
+              <p className="text-text-muted text-sm font-medium">{t('donate.scanUPI', locale)}</p>
               <div className="w-52 h-52 mx-auto rounded-xl bg-white flex items-center justify-center border-2 border-border">
                 {/* Replace with actual UPI QR code image */}
                 <div className="text-center p-4">
@@ -233,7 +236,7 @@ export default function DonatePage() {
                 UPI ID: <span className="font-mono text-text-primary">mentorsforkids@upi</span>
               </p>
               <p className="text-text-muted text-xs">
-                Pay any amount you wish to contribute
+                {t('donate.anyAmount', locale)}
               </p>
             </GlassCard>
 
@@ -242,7 +245,7 @@ export default function DonatePage() {
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
               <p className="text-text-muted text-sm">
-                80G tax benefit certificate will be emailed after payment
+                {t('donate.80g', locale)}
               </p>
             </GlassCard>
 
@@ -250,11 +253,11 @@ export default function DonatePage() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              I&apos;ve Completed the Payment
+              {t('donate.iDone', locale)}
             </Button>
 
             <p className="text-text-muted text-xs text-center">
-              Scan the QR code with any UPI app (Google Pay, PhonePe, Paytm, etc.)
+              {t('donate.upiApps', locale)}
             </p>
           </motion.div>
         )}
@@ -278,10 +281,10 @@ export default function DonatePage() {
             </motion.div>
 
             <h2 className="font-display font-bold text-3xl text-text-primary">
-              Thank You! 🎉
+              {t('donate.thanks', locale)}
             </h2>
             <p className="text-text-muted text-lg max-w-md mx-auto">
-              Your generosity is making a real difference in a child&apos;s life.
+              {t('donate.impact', locale)}
             </p>
 
             {selectedStudent && (
@@ -290,7 +293,7 @@ export default function DonatePage() {
                   {selectedStudent.initials}
                 </div>
                 <h3 className="font-display font-bold text-lg text-text-primary">{displayName(selectedStudent.name)}</h3>
-                <p className="text-text-muted text-sm mt-1">Your support means the world to {selectedStudent.name.split(' ')[0]}.</p>
+                <p className="text-text-muted text-sm mt-1">{t('donate.supportMeans', locale, { name: selectedStudent.name.split(' ')[0] })}</p>
               </GlassCard>
             )}
 
@@ -298,16 +301,16 @@ export default function DonatePage() {
               <GlassCard className="p-6 max-w-sm mx-auto" glow>
                 <div className="w-16 h-16 rounded-xl bg-bg-elevated flex items-center justify-center text-2xl mx-auto mb-3">🏫</div>
                 <h3 className="font-display font-bold text-lg text-text-primary">{selectedSchool.name}</h3>
-                <p className="text-text-muted text-sm mt-1">Your support helps every student at this school.</p>
+                <p className="text-text-muted text-sm mt-1">{t('donate.supportSchool', locale)}</p>
               </GlassCard>
             )}
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link href="/schools">
-                <Button variant="primary">Explore More Students</Button>
+                <Button variant="primary">{t('donate.exploreStudents', locale)}</Button>
               </Link>
               <Link href="/">
-                <Button variant="secondary">Back to Home</Button>
+                <Button variant="secondary">{t('donate.backHome', locale)}</Button>
               </Link>
             </div>
           </motion.div>
@@ -316,8 +319,8 @@ export default function DonatePage() {
         {/* Donor FAQs — always visible */}
         <div className="mt-16 space-y-6">
           <div>
-            <h2 className="font-display font-bold text-2xl text-text-primary">Frequently Asked Questions</h2>
-            <p className="text-text-muted text-sm mt-1">Common questions from donors.</p>
+            <h2 className="font-display font-bold text-2xl text-text-primary">{t('donate.faqTitle', locale)}</h2>
+            <p className="text-text-muted text-sm mt-1">{t('donate.faqSubtitle', locale)}</p>
           </div>
           <div className="space-y-3">
             {donorFaqs.map((faq, i) => (

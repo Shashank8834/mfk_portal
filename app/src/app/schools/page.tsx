@@ -9,9 +9,12 @@ import { getStudentsBySchool } from '@/data/students';
 import { getSchoolImage } from '@/lib/images';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 export default function SchoolsPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const locale = useLocaleStore((s) => s.locale);
 
   const filteredSchools = useMemo(() => {
     return schools.filter((s) => {
@@ -31,10 +34,10 @@ export default function SchoolsPage() {
           className="mb-8"
         >
           <h1 className="font-display font-bold text-3xl md:text-4xl text-text-primary">
-            All Schools
+            {t('schools.title', locale)}
           </h1>
           <p className="text-text-muted mt-2 text-lg">
-            Explore {schools.length} government high schools across Bangalore
+            {t('schools.subtitle', locale, { count: String(schools.length) })}
           </p>
         </motion.div>
 
@@ -49,8 +52,8 @@ export default function SchoolsPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search schools..."
-              aria-label="Search schools"
+              placeholder={t('schools.search', locale)}
+              aria-label={t('schools.search', locale)}
               className="w-full pl-12 pr-4 py-3 rounded-xl glass focus:border-primary/40 text-text-primary placeholder-text-muted text-sm outline-none transition-colors"
             />
           </div>
@@ -97,14 +100,14 @@ export default function SchoolsPage() {
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <polygon points="5 3 19 12 5 21 5 3" />
                           </svg>
-                          {schoolStudents.reduce((sum, s) => sum + s.videos.length, 0)} videos
+                          {schoolStudents.reduce((sum, s) => sum + s.videos.length, 0)} {t('schools.videos', locale)}
                         </span>
                         <span className="text-text-muted flex items-center gap-1">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                           </svg>
-                          {school.studentCount} students
+                          {school.studentCount} {t('schools.students', locale)}
                         </span>
                       </div>
                     </div>
@@ -117,7 +120,7 @@ export default function SchoolsPage() {
 
         {filteredSchools.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-text-muted text-lg">No schools found matching your criteria.</p>
+            <p className="text-text-muted text-lg">{t('schools.noResults', locale)}</p>
           </div>
         )}
       </div>

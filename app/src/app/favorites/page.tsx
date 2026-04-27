@@ -14,6 +14,8 @@ import { Badge } from '@/components/ui/Badge';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
 import { Button } from '@/components/ui/Button';
 import { displayName } from '@/lib/utils';
+import { useLocaleStore } from '@/stores/localeStore';
+import { t } from '@/lib/i18n';
 
 type SortBy = 'recent' | 'school' | 'grade';
 
@@ -21,6 +23,7 @@ export default function FavoritesPage() {
   const { favorites } = useFavoritesStore();
   const [sortBy, setSortBy] = useState<SortBy>('recent');
   const [mounted, setMounted] = useState(false);
+  const locale = useLocaleStore((s) => s.locale);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration guard for localStorage-backed state
   useEffect(() => { setMounted(true); }, []);
@@ -68,12 +71,12 @@ export default function FavoritesPage() {
           className="mb-8"
         >
           <h1 className="font-display font-bold text-3xl md:text-4xl text-text-primary">
-            My Favorites
+            {t('favorites.title', locale)}
           </h1>
           <p className="text-text-muted mt-2 text-lg">
             {favorites.length > 0
-              ? `${favorites.length} saved item${favorites.length === 1 ? '' : 's'}`
-              : 'No saved items yet'}
+              ? `${favorites.length} ${favorites.length === 1 ? 'item' : 'items'}`
+              : t('favorites.empty', locale)}
           </p>
         </motion.div>
 
@@ -82,9 +85,9 @@ export default function FavoritesPage() {
             {/* Sort controls */}
             <div className="flex gap-2 mb-8">
               {[
-                { value: 'recent' as SortBy, label: 'Recently Saved' },
-                { value: 'school' as SortBy, label: 'By School' },
-                { value: 'grade' as SortBy, label: 'By Grade' },
+                { value: 'recent' as SortBy, label: t('favorites.recent', locale) },
+                { value: 'school' as SortBy, label: t('favorites.bySchool', locale) },
+                { value: 'grade' as SortBy, label: t('favorites.byGrade', locale) },
               ].map((s) => (
                 <button
                   key={s.value}
@@ -218,17 +221,17 @@ export default function FavoritesPage() {
               </svg>
             </div>
             <h2 className="font-display font-bold text-2xl text-text-primary mb-3">
-              No favorites yet
+              {t('favorites.noFavs', locale)}
             </h2>
             <p className="text-text-muted text-lg mb-8 max-w-md mx-auto">
-              Save students and schools by tapping the ♡ icon. They&apos;ll appear here for quick access.
+              {t('favorites.noFavsDesc', locale)}
             </p>
             <div className="flex gap-4 justify-center">
               <Link href="/schools">
-                <Button variant="primary">Explore Schools</Button>
+                <Button variant="primary">{t('favorites.exploreSchools', locale)}</Button>
               </Link>
               <Link href="/map">
-                <Button variant="secondary">View Map</Button>
+                <Button variant="secondary">{t('favorites.viewMap', locale)}</Button>
               </Link>
             </div>
           </motion.div>
