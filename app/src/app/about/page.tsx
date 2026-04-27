@@ -178,19 +178,61 @@ export default function AboutPage() {
             </p>
           </GlassCard>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {['Intern 1', 'Intern 2', 'Intern 3'].map((name) => (
-              <GlassCard key={name} className="p-6 text-center space-y-3">
-                <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5B4DB1" strokeWidth="1.5">
+          {/* Leadership hierarchy */}
+          <div className="space-y-6">
+            {/* CEO */}
+            <div className="flex justify-center">
+              <GlassCard className="p-6 text-center space-y-3 max-w-sm w-full border-gold/30" glow>
+                <div className="w-20 h-20 rounded-full bg-gold/10 border-2 border-gold/30 flex items-center justify-center mx-auto">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="1.5">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                   </svg>
                 </div>
-                <h3 className="font-display font-bold text-text-primary">{name}</h3>
-                <p className="text-text-muted text-sm">{t('about.intern', locale)}</p>
+                <h3 className="font-display font-bold text-lg text-text-primary">Pavan Sharma</h3>
+                <p className="text-gold text-sm font-semibold uppercase tracking-wider">{t('about.ceo', locale)}</p>
               </GlassCard>
-            ))}
+            </div>
+
+            {/* Connector line */}
+            <div className="flex justify-center">
+              <div className="w-0.5 h-8 bg-border" />
+            </div>
+
+            {/* Chief Mentor */}
+            <div className="flex justify-center">
+              <GlassCard className="p-6 text-center space-y-3 max-w-sm w-full border-primary/30" glow>
+                <div className="w-20 h-20 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center mx-auto">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5B4DB1" strokeWidth="1.5">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </div>
+                <h3 className="font-display font-bold text-lg text-text-primary">Hartej Singh</h3>
+                <p className="text-primary text-sm font-semibold uppercase tracking-wider">{t('about.chiefMentor', locale)}</p>
+              </GlassCard>
+            </div>
+
+            {/* Connector line */}
+            <div className="flex justify-center">
+              <div className="w-0.5 h-8 bg-border" />
+            </div>
+
+            {/* Mentors grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {['Intern 1', 'Intern 2', 'Intern 3'].map((name) => (
+                <GlassCard key={name} className="p-6 text-center space-y-3">
+                  <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5B4DB1" strokeWidth="1.5">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <h3 className="font-display font-bold text-text-primary">{name}</h3>
+                  <p className="text-text-muted text-sm">{t('about.intern', locale)}</p>
+                </GlassCard>
+              ))}
+            </div>
           </div>
 
           {/* Hiring CTA */}
