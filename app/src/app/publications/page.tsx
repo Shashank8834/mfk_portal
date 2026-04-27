@@ -34,16 +34,25 @@ export default function PublicationsPage() {
                 <div className="group bg-bg-card rounded-2xl border border-border p-8 md:p-10 card-hover-glow cursor-pointer">
                   <div className="flex flex-col md:flex-row gap-8 items-start">
                     {/* Book cover placeholder */}
-                    <div className="w-full md:w-48 h-64 md:h-72 rounded-xl bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 border border-border flex flex-col items-center justify-center shrink-0 group-hover:shadow-lg transition-shadow">
-                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <div className="relative w-full md:w-48 h-64 md:h-72 rounded-xl bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 border border-border flex flex-col items-center justify-center shrink-0 group-hover:shadow-lg transition-shadow overflow-hidden">
+                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:opacity-0 transition-opacity duration-200">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
                           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                           <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                         </svg>
                       </div>
-                      <span className="text-xs text-text-muted font-medium uppercase tracking-wider">
+                      <span className="text-xs text-text-muted font-medium uppercase tracking-wider group-hover:opacity-0 transition-opacity duration-200">
                         {book.chapters.length} Chapters
                       </span>
+                      {/* Play overlay on hover */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-primary/10">
+                        <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-lg">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF">
+                            <polygon points="8,5 19,12 8,19" />
+                          </svg>
+                        </div>
+                        <span className="text-primary text-xs font-semibold">Watch Video</span>
+                      </div>
                     </div>
 
                     {/* Book info */}

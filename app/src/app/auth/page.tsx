@@ -1,11 +1,21 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
+import { useAuthStore, MOCK_USERS } from '@/stores/authStore';
+
+// Design-pass role picker: maps phone prefix to role
+const ROLE_MAP: Record<string, 'admin' | 'mentor'> = {
+  '9000000001': 'admin',
+  '9876543210': 'mentor',
+};
 
 export default function AuthPage() {
+  const router  = useRouter();
+  const setUser = useAuthStore((s) => s.setUser);
   const [phone, setPhone] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -155,7 +165,12 @@ export default function AuthPage() {
                 variant="primary"
                 size="lg"
                 className="w-full"
-                onClick={() => {/* Mock verify */}}
+                onClick={() => {
+                  const role = ROLE_MAP[phone] ?? 'public';
+                  const user = MOCK_USERS[role];
+                  setUser({ ...user, phone });
+                  router.push(role === 'admin' ? '/admin' : role === 'mentor' ? '/mentor' : '/');
+                }}
                 disabled={otp.some(d => !d)}
               >
                 Verify & Login

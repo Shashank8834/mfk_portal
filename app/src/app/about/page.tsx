@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button } from '@/components/ui/Button';
 
+
 const sectionAnim = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
@@ -69,7 +70,7 @@ export default function AboutPage() {
               Our program has four primary goals: develop good daily habits, cultivate the habit of earning money, encourage saving, and teach how to grow money through investment. Alongside this, we improve spoken English and introduce effective study methods for academic success.
             </p>
             <p className="text-text-muted text-lg leading-relaxed max-w-3xl">
-              Students maintain a daily register documenting their tasks, which is submitted to the class teacher each day for review. Consistent completion of tasks and homework earns monthly rewards — ₹250 from the foundation, invested directly into a mutual fund (Large Cap Stock ELSS). Parents can match this amount, bringing the total monthly investment up to ₹750.
+              Students maintain a daily register documenting their tasks, which is submitted to the class teacher each day for review. Consistent completion of tasks and homework earns monthly rewards — ₹250 from the foundation, invested directly into a mutual fund (Large Cap Stock ELSS). If parents contribute ₹250 into their child&apos;s savings account, we double our reward to ₹500, bringing the total monthly investment up to ₹750.
             </p>
 
             {/* YouTube Video Embed */}
@@ -160,13 +161,14 @@ export default function AboutPage() {
 
           {/* Spoken English */}
           <div className="space-y-4">
-            <h3 className="font-display font-bold text-xl text-text-primary">Spoken English Training</h3>
+            <h3 className="font-display font-bold text-xl text-text-primary">Spoken Language Training</h3>
+            <p className="text-text-muted text-sm font-medium">Languages: English, Hindi and Kannada</p>
             <GlassCard className="p-6 space-y-3">
               <p className="text-text-muted text-base leading-relaxed">
-                Dedicated sessions after school (3:00 PM – 4:30 PM) focused on spoken English. Students read simple books using a dictionary, write down difficult words, and practice in groups of 3 to develop speaking and listening skills.
+                Dedicated sessions after school (3:00 PM – 4:30 PM) focused on spoken language skills. Students read simple books using a dictionary, write down difficult words, and practice in groups of 3 to develop speaking and listening skills.
               </p>
               <p className="text-text-muted text-base leading-relaxed">
-                An English mentor visits on alternate days to guide and support. Parental involvement is encouraged during mentor visits. Non-participation results in absence marking from the program.
+                A mentor visits on alternate days to participate in these Group Discussions. Parental involvement is encouraged during mentor visits. Non-participation results in absence marking from the program.
               </p>
             </GlassCard>
           </div>
@@ -182,7 +184,7 @@ export default function AboutPage() {
 
           <GlassCard className="p-6 space-y-3">
             <p className="text-text-muted text-base leading-relaxed">
-              Paid interns who are dedicated to a school and visit thrice a day. From 2–3 PM, they check all the journals and upload to our portal.
+              Paid interns who are dedicated to a school and visit thrice a week. From 2–3 PM, they check all the journals and upload to our portal.
               From 3–4:30, they help the students improve their spoken language skills by participating in group discussions, giving tips, and recognising great performances.
               Then they interact with visiting parents, videotape their observations and concerns, and upload to the portal.
               If parents invite, they also visit student homes to capture their context, videotaping and uploading.
@@ -283,7 +285,7 @@ export default function AboutPage() {
             </div>
             <div>
               <h3 className="font-display font-bold text-lg text-text-primary">Community Volunteers</h3>
-              <p className="text-text-muted text-sm">Friends and family members who dedicate a couple of hours each week to mentor students, support English learning sessions, and help with program activities.</p>
+              <p className="text-text-muted text-sm">Friends and family members who dedicate a couple of hours each week to mentor students, support language learning sessions, and help with program activities.</p>
             </div>
           </GlassCard>
         </motion.section>
@@ -372,6 +374,26 @@ export default function AboutPage() {
               </div>
             </div>
           </GlassCard>
+
+          {/* Tech Lead Profile */}
+          <Link href="/mentors/tech-lead">
+            <GlassCard className="p-6 flex items-center gap-5 group cursor-pointer hover:border-primary/40 transition-colors">
+              <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5B4DB1" strokeWidth="1.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-display font-bold text-lg text-text-primary group-hover:text-primary transition-colors">Technology Lead</h3>
+                <p className="text-text-muted text-sm mt-1">Built and maintains the MFK portal — from architecture to deployment.</p>
+                <p className="text-primary text-xs font-medium mt-2">View Profile →</p>
+              </div>
+              <svg className="text-text-muted group-hover:text-primary transition-colors shrink-0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </GlassCard>
+          </Link>
 
           {/* Security & Privacy */}
           <GlassCard className="p-8 space-y-5">

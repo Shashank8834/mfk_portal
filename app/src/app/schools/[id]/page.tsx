@@ -231,7 +231,7 @@ export default function SchoolProfilePage({ params }: { params: Promise<{ id: st
               <p className="text-text-muted text-sm">
                 Help provide better education, infrastructure, and opportunities for {school.studentCount} students.
               </p>
-              <Link href="/donate">
+              <Link href={`/donate?type=school&id=${school.id}`}>
                 <Button variant="secondary" className="w-full">
                   Support This School
                 </Button>

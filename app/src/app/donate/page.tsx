@@ -1,6 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+
+const donorFaqs = [
+  { q: 'What is the minimum amount I can contribute?', a: 'You can contribute any amount — there is no minimum.' },
+  { q: 'Do I get tax benefits under Section 80G?', a: 'Yes. Please enter your PAN details after payment to receive your 80G certificate by email.' },
+  { q: 'Can I direct my donation towards a specific student?', a: 'Yes. Select the student while making your donation and your contribution will be tracked against their account.' },
+  { q: 'Can I contribute directly to a student\'s mutual fund?', a: 'No. Students must earn their rewards as per our Standard Procedures. Direct contributions to the mutual fund are not permitted.' },
+  { q: 'When will the parents be able to withdraw the money?', a: 'Since the funds are invested in Mutual Funds (Large Cap Stock ELSS), there is a 3-year lock-in period. We emphasise the importance of staying invested longer to benefit from the power of compounding.' },
+  { q: 'Will the student I sponsor know I am their sponsor?', a: 'No. Your identity remains private. You can track the student\'s progress through the portal, but they will not be informed of who is sponsoring them.' },
+  { q: 'Can I pay with a credit card?', a: 'No. Please use UPI (Google Pay, PhonePe, Paytm, or any UPI-enabled app).' },
+  { q: 'Do you accept Dollar contributions?', a: 'Not at this time. If you would like to be informed when FCRA / international contributions are available, please write to us.' },
+];
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/ui/GlassCard';
@@ -14,10 +26,26 @@ type DonationType = 'student' | 'school' | 'general';
 type Step = 1 | 2 | 3 | 4;
 
 export default function DonatePage() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<Step>(1);
   const [donationType, setDonationType] = useState<DonationType | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  useEffect(() => {
+    const type = searchParams.get('type') as DonationType | null;
+    const id = searchParams.get('id');
+    if (type === 'school' && id) {
+      setDonationType('school');
+      setSelectedId(id);
+      setStep(3);
+    } else if (type === 'student' && id) {
+      setDonationType('student');
+      setSelectedId(id);
+      setStep(3);
+    }
+  }, [searchParams]);
 
   const selectedStudent = donationType === 'student' ? allStudents.find(s => s.id === selectedId) : null;
   const selectedSchool = donationType === 'school' ? schools.find(s => s.id === selectedId) : null;
@@ -284,6 +312,37 @@ export default function DonatePage() {
             </div>
           </motion.div>
         )}
+
+        {/* Donor FAQs — always visible */}
+        <div className="mt-16 space-y-6">
+          <div>
+            <h2 className="font-display font-bold text-2xl text-text-primary">Frequently Asked Questions</h2>
+            <p className="text-text-muted text-sm mt-1">Common questions from donors.</p>
+          </div>
+          <div className="space-y-3">
+            {donorFaqs.map((faq, i) => (
+              <GlassCard key={i} className="overflow-hidden">
+                <button
+                  className="w-full text-left px-5 py-4 flex items-center justify-between gap-3"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                >
+                  <span className="font-medium text-text-primary text-sm">{faq.q}</span>
+                  <svg
+                    width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                    className={`shrink-0 text-text-muted transition-transform ${openFaq === i ? 'rotate-180' : ''}`}
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                {openFaq === i && (
+                  <div className="px-5 pb-4 text-text-muted text-sm leading-relaxed border-t border-border pt-3">
+                    {faq.a}
+                  </div>
+                )}
+              </GlassCard>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

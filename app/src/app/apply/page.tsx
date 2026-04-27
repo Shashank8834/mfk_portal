@@ -4,11 +4,27 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
+import { GlassCard } from '@/components/ui/GlassCard';
+
+const mentorFaqs = [
+  { q: 'What should be my level of education?', a: 'At least a Bachelor\'s degree. Students in their final year of college are also welcome to apply.' },
+  { q: 'Do I need a B.Ed?', a: 'No. A B.Ed is not required. We are looking for motivated individuals who genuinely care about children\'s development, not formal teaching qualifications.' },
+  { q: 'Will I be teaching students in a classroom setting?', a: 'No. Your role is to review student journals, facilitate group discussions, and interact with parents — all outside regular school hours (2–4:30 PM).' },
+  { q: 'Are dates flexible?', a: 'Yes, within reason. You commit to visiting your assigned school thrice a week. Specific days can be discussed during onboarding.' },
+  { q: 'Will I be able to interact with other mentors?', a: 'Yes. MFK organises regular meetups for mentors to share experiences, discuss challenges, and learn from each other.' },
+  { q: 'What is Badee Bahen / Badaa Bhai?', a: 'A peer-mentorship initiative within the program where older students guide younger ones. As a mentor, you\'ll help facilitate these relationships in your school.' },
+  { q: 'How will I mark my attendance?', a: 'Through the MFK portal. You log in on your phone and check in when you arrive at the school. Your visit is also timestamped automatically.' },
+  { q: 'How will I upload documents?', a: 'Via the MFK portal — you can upload PDFs, scanned pages, and photos directly from your phone after each visit.' },
+  { q: 'How will I upload videos?', a: 'Record on your phone and upload through the portal. Videos are attached directly to the relevant student\'s profile.' },
+  { q: 'Will there be any training?', a: 'Yes, after you\'ve been appointed. Training covers journal review, group discussions, parent interaction, and how to use the portal effectively.' },
+  { q: 'How many students am I supposed to handle?', a: 'Combining 8th, 9th, and 10th grades, no more than 100 students per mentor. If a school has more students, additional mentors will be appointed.' },
+];
 
 type Step = 'form' | 'verify' | 'success';
 
 export default function ApplyPage() {
   const [step, setStep] = useState<Step>('form');
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -244,6 +260,37 @@ export default function ApplyPage() {
             </Link>
           </motion.div>
         )}
+
+        {/* FAQs — always visible */}
+        <div className="mt-16 space-y-6">
+          <div>
+            <h2 className="font-display font-bold text-2xl text-text-primary">Frequently Asked Questions</h2>
+            <p className="text-text-muted text-sm mt-1">Everything you need to know before applying.</p>
+          </div>
+          <div className="space-y-3">
+            {mentorFaqs.map((faq, i) => (
+              <GlassCard key={i} className="overflow-hidden">
+                <button
+                  className="w-full text-left px-5 py-4 flex items-center justify-between gap-3"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                >
+                  <span className="font-medium text-text-primary text-sm">{faq.q}</span>
+                  <svg
+                    width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                    className={`shrink-0 text-text-muted transition-transform ${openFaq === i ? 'rotate-180' : ''}`}
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                {openFaq === i && (
+                  <div className="px-5 pb-4 text-text-muted text-sm leading-relaxed border-t border-border pt-3">
+                    {faq.a}
+                  </div>
+                )}
+              </GlassCard>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
