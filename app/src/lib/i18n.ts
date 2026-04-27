@@ -283,7 +283,7 @@ const translations: Record<Locale, TranslationMap> = {
     'about.readJD': 'Read the Full Job Description',
     'about.applyNow': 'Apply Now',
     'about.partners': 'Partners',
-    'about.zerodhaDesc': "Investment partner enabling mutual fund accounts (Large Cap Stock ELSS) for students. Every month, ₹250 from the foundation is invested directly into each student's account.",
+    'about.zerodhaDesc': 'Investment partner enabling mutual fund accounts (Large Cap Stock ELSS) for students.',
     'about.volunteers': 'Volunteers',
     'about.communityVol': 'Community Volunteers',
     'about.volDesc': 'Friends and family members who dedicate a couple of hours each week to mentor students, support language learning sessions, and help with program activities.',
