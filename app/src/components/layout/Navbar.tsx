@@ -38,6 +38,7 @@ export function Navbar() {
   const favCount = useFavoritesStore((s) => s.favorites.length);
   const locale = useLocaleStore((s) => s.locale);
   const navLinks = useNavLinks();
+  const [openSection, setOpenSection] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -76,22 +77,15 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 shrink-0 group" prefetch>
-              <div className="relative">
-                <Image
-                  src="/mfk-logo.png"
-                  alt="Mentors for Kids"
-                  width={44}
-                  height={44}
-                  className="w-10 h-10 md:w-11 md:h-11 drop-shadow-[0_0_12px_rgba(91,77,177,0.4)] group-hover:drop-shadow-[0_0_18px_rgba(91,77,177,0.6)] transition-all duration-300"
-                  priority
-                />
-              </div>
-              <span className="font-display font-bold text-lg md:text-xl hidden sm:block">
-                <span className="text-[#4B3B8E]">Mentors</span>
-                <span className="text-accent"> for </span>
-                <span className="text-[#F5A623]">Kids</span>
-              </span>
+            <Link href="/" className="flex items-center shrink-0 group" prefetch>
+              <Image
+                src="/mfk-logo.png"
+                alt="Mentors for Kids"
+                width={1536}
+                height={1024}
+                className="h-10 md:h-12 w-auto drop-shadow-[0_0_12px_rgba(91,77,177,0.35)] group-hover:drop-shadow-[0_0_18px_rgba(91,77,177,0.55)] transition-all duration-300"
+                priority
+              />
             </Link>
 
             {/* Desktop Nav */}
@@ -173,10 +167,8 @@ export function Navbar() {
 
             {/* Right section */}
             <div className="flex items-center gap-3">
-              {/* Language Switcher */}
-              <div className="hidden md:block">
-                <LanguageSwitcher />
-              </div>
+              {/* Language Switcher — visible on all sizes */}
+              <LanguageSwitcher />
 
               {/* Cmd+K search button */}
               <button
@@ -205,12 +197,24 @@ export function Navbar() {
                 {t('nav.donate', locale)}
               </Link>
 
-              {/* Login button */}
+              {/* Login button — desktop full, mobile compact */}
               <Link
                 href="/auth"
                 className="hidden md:inline-flex items-center px-5 py-2 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary-glow hover:shadow-[0_0_20px_rgba(91,77,177,0.4)] transition-all duration-300"
               >
                 {t('nav.login', locale)}
+              </Link>
+              <Link
+                href="/auth"
+                className="md:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-glow transition-all duration-300"
+                aria-label={t('nav.login', locale)}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                  <polyline points="10 17 15 12 10 7" />
+                  <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+                <span className="text-xs">{t('nav.login', locale)}</span>
               </Link>
 
               {/* Mobile hamburger */}
@@ -253,45 +257,90 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 bottom-0 w-4/5 max-w-sm bg-bg-card border-l border-border p-6 pt-24"
+              className="absolute right-0 top-0 bottom-0 w-full sm:w-4/5 sm:max-w-sm bg-bg-card border-l border-border p-6 pt-24 overflow-y-auto"
             >
               <div className="flex flex-col gap-2">
                 {navLinks.map((link) => {
                   const isActive = pathname === link.href || (link.dropdown && pathname.startsWith(link.href));
-                  return (
-                    <div key={link.href}>
-                      <Link
-                        href={link.href}
-                        className={cn(
-                          'flex items-center justify-between px-4 py-3 rounded-xl text-lg font-medium transition-all',
-                          isActive
-                            ? 'bg-primary/10 text-primary-glow'
-                            : 'text-text-muted hover:text-text-primary hover:bg-bg-elevated'
-                        )}
-                      >
-                        <span className="flex items-center gap-2">
-                          {link.label}
-                        </span>
-                        {link.label === 'Favorites' && favCount > 0 && (
-                          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-accent text-white text-sm font-bold">
-                            {favCount}
-                          </span>
-                        )}
-                      </Link>
-                      {link.dropdown && (
-                        <div className="ml-6 mt-1 flex flex-col gap-1">
-                          {link.dropdown.map((sub) => (
-                            <Link
-                              key={sub.href}
-                              href={sub.href}
-                              className="px-4 py-2 rounded-lg text-sm text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors"
+                  const isOpen = openSection === link.href;
+                  if (link.dropdown) {
+                    return (
+                      <div key={link.href}>
+                        <button
+                          type="button"
+                          onClick={() => setOpenSection(isOpen ? null : link.href)}
+                          aria-expanded={isOpen}
+                          className={cn(
+                            'w-full flex items-center justify-between px-4 py-3 rounded-xl text-lg font-medium transition-all',
+                            isActive
+                              ? 'bg-primary/10 text-primary-glow'
+                              : 'text-text-muted hover:text-text-primary hover:bg-bg-elevated'
+                          )}
+                        >
+                          <span>{link.label}</span>
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            className={cn('transition-transform', isOpen && 'rotate-180')}
+                          >
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </button>
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div
+                              key="sub"
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
                             >
-                              {sub.label}
-                            </Link>
-                          ))}
-                        </div>
+                              <div className="ml-6 mt-1 flex flex-col gap-1">
+                                <Link
+                                  href={link.href}
+                                  className="px-4 py-2 rounded-lg text-sm text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors"
+                                >
+                                  {link.label}
+                                </Link>
+                                {link.dropdown.map((sub) => (
+                                  <Link
+                                    key={sub.href}
+                                    href={sub.href}
+                                    className="px-4 py-2 rounded-lg text-sm text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors"
+                                  >
+                                    {sub.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  }
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={cn(
+                        'flex items-center justify-between px-4 py-3 rounded-xl text-lg font-medium transition-all',
+                        isActive
+                          ? 'bg-primary/10 text-primary-glow'
+                          : 'text-text-muted hover:text-text-primary hover:bg-bg-elevated'
                       )}
-                    </div>
+                    >
+                      <span className="flex items-center gap-2">{link.label}</span>
+                      {link.label === 'Favorites' && favCount > 0 && (
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-accent text-white text-sm font-bold">
+                          {favCount}
+                        </span>
+                      )}
+                    </Link>
                   );
                 })}
                 <hr className="border-border my-4" />

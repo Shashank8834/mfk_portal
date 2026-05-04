@@ -238,10 +238,10 @@ const translations: Record<Locale, TranslationMap> = {
     // About page
     'about.badge': 'About Us',
     'about.title': 'Financial Literacy for Every Child',
-    'about.subtitle': 'We teach underprivileged schoolchildren the value of discipline, good habits, and money management — one journal entry at a time.',
+    'about.subtitle': 'How can underprivileged schoolchildren acquire financial literacy if they have no money to invest? We Reward Good Behavior with Mutual Funds worth ₹250 every month. If their parents match it, we double our reward to ₹500 — and then teach them the power of compounding so they resist the temptation to spend, and instead save more at every opportunity.',
     'about.whatWeDo': 'What we do',
-    'about.whatP1': 'Our program has four primary goals: develop good daily habits, cultivate the habit of earning money, encourage saving, and teach how to grow money through investment. Alongside this, we improve spoken English and introduce effective study methods for academic success.',
-    'about.whatP2': "Students maintain a daily register documenting their tasks, which is submitted to the class teacher each day for review. Consistent completion of tasks and homework earns monthly rewards — ₹250 from the foundation, invested directly into a mutual fund (Large Cap Stock ELSS). If parents contribute ₹250 into their child's savings account, we double our reward to ₹500, bringing the total monthly investment up to ₹750.",
+    'about.whatP1': 'Our program has three primary goals: develop good daily habits, avoid wasting money and save instead, and grow money through the power of compounding. Alongside this, we improve spoken English and introduce effective study methods for academic success.',
+    'about.whatP2': "Students maintain a daily register documenting their tasks, which is submitted to the class teacher each day for review. Consistent completion of tasks and homework earns monthly rewards — ₹250 from the foundation, invested directly into a mutual fund (Large Cap Stock ELSS). If parents contribute ₹250 into the same Mutual Fund, we double our reward to ₹500, bringing the total monthly investment up to ₹750.",
     'about.rewardTitle': 'Monthly Award System',
     'about.col.condition': 'Condition',
     'about.col.foundation': 'Foundation',
