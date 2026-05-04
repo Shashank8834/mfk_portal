@@ -13,12 +13,13 @@ const MAX_FIRST_NAME = 8;
 
 export default function EditStudentNamePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const student = lookupStudent(id);
-  if (!student) return notFound();
-
+  const maybeStudent = lookupStudent(id);
   const router = useRouter();
   const setOverride = useStudentOverridesStore((s) => s.setOverride);
-  const existingOverride = useStudentOverridesStore((s) => s.byPnr[student.pnr]);
+  const existingOverride = useStudentOverridesStore((s) => (maybeStudent ? s.byPnr[maybeStudent.pnr] : undefined));
+
+  if (!maybeStudent) return notFound();
+  const student = maybeStudent;
 
   const [assumedFirstName, setAssumedFirstName] = useState(existingOverride?.assumedFirstName ?? student.assumedFirstName);
   const [assumedLastInitial, setAssumedLastInitial] = useState(existingOverride?.assumedLastInitial ?? student.assumedLastInitial);
