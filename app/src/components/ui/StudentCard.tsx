@@ -9,7 +9,7 @@ import { Badge } from './Badge';
 import { FavoriteButton } from './FavoriteButton';
 import { Button } from './Button';
 import { Student } from '@/types';
-import { displayName } from '@/lib/utils';
+import { publicName } from '@/lib/utils';
 
 interface StudentCardProps {
   student: Student;
@@ -25,13 +25,13 @@ export function StudentCard({ student, index = 0 }: StudentCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
     >
-      <Link href={`/students/${student.id}`}>
+      <Link href={`/students/${student.pnr}`}>
         <GlassCard className="group overflow-hidden w-[300px] md:w-[320px]" hover>
           {/* Thumbnail */}
           <div className="relative aspect-video overflow-hidden">
             <Image
               src={latestVideo?.thumbnailUrl || `https://picsum.photos/seed/${student.id}/640/360`}
-              alt={`${student.name}'s story`}
+              alt={`${publicName(student)}'s story`}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="320px"
@@ -66,7 +66,7 @@ export function StudentCard({ student, index = 0 }: StudentCardProps) {
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <h3 className="font-display font-semibold text-text-primary truncate text-base">
-                  {displayName(student.name)}
+                  {publicName(student)}
                 </h3>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge variant="primary" size="sm">{student.schoolName.split(' ').slice(0, 2).join(' ')}</Badge>

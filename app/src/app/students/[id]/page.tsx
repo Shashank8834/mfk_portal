@@ -1,26 +1,63 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { notFound } from 'next/navigation';
-import { getStudentById } from '@/data/students';
+import { lookupStudent } from '@/data/students';
 import { donors } from '@/data/donors';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
-import { getInitials, displayName } from '@/lib/utils';
+import { publicName } from '@/lib/utils';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function StudentProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  // The route param is the public PNR ("K7M2X9"), but we also resolve legacy
+  // "stu-001" links so old saved URLs and bookmarks keep working.
   const { id } = use(params);
-  const student = getStudentById(id);
+  const student = lookupStudent(id);
   if (!student) notFound();
+
+  // Staff (admin or mentor) can reveal the real name on demand. This is a
+  // UI-side gate only — real enforcement must live on the server once a
+  // backend exists. TODO(server): re-check role server-side before sending
+  // the real-name fields.
+  const role = useAuthStore((s) => s.user?.role);
+  const isStaff = role === 'admin' || role === 'mentor';
+  const [revealReal, setRevealReal] = useState(false);
 
   const studentDonors = donors.slice(0, student.sponsorCount || 3);
   const latestVideo = student.videos[0];
+  const publicFull = publicName(student);
+  const firstNameForCopy = student.graduated ? `Alumna ${student.pnr}` : student.assumedFirstName;
+
+  // Graduated alumni: collapse to an anonymous placeholder.
+  if (student.graduated) {
+    return (
+      <div className="pt-20 min-h-screen pb-24 md:pb-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <GlassCard className="p-10 text-center space-y-5">
+            <div className="w-24 h-24 rounded-2xl bg-bg-elevated border border-border flex items-center justify-center mx-auto">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#8E89B8" strokeWidth="1.5">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                <path d="M6 12v5c3 3 9 3 12 0v-5" />
+              </svg>
+            </div>
+            <h1 className="font-display font-extrabold text-3xl text-text-primary">{publicFull}</h1>
+            <p className="text-text-muted text-sm max-w-md mx-auto">
+              This student has graduated from the program. Their personal data has been anonymised in line with our{' '}
+              <Link href="/data-retention" className="text-primary hover:underline">Data Retention Policy</Link>.
+            </p>
+            <p className="text-text-muted text-xs font-mono">{student.pnr}</p>
+          </GlassCard>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-20 min-h-screen pb-24 md:pb-10">
@@ -81,7 +118,7 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
           </motion.div>
         )}
 
-        {/* ── STUDENT HEADER ── Name, school, badges */}
+        {/* ── STUDENT HEADER ── Anonymised name, school, badges */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -91,9 +128,9 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
           <div className="relative">
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden glass border-2 border-primary/30 flex items-center justify-center bg-bg-elevated">
               {student.avatarUrl ? (
-                <Image src={student.avatarUrl} alt={student.name} width={96} height={96} className="w-full h-full object-cover" />
+                <Image src={student.avatarUrl} alt={publicFull} width={96} height={96} className="w-full h-full object-cover" />
               ) : (
-                <span className="font-display font-bold text-2xl text-primary">{getInitials(student.name)}</span>
+                <span className="font-display font-bold text-2xl text-primary">{student.initials}</span>
               )}
             </div>
             <div className="absolute -bottom-2 -right-2">
@@ -102,7 +139,7 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
           </div>
 
           <div className="flex-1">
-            <h1 className="font-display font-extrabold text-3xl md:text-4xl text-text-primary">{displayName(student.name)}</h1>
+            <h1 className="font-display font-extrabold text-3xl md:text-4xl text-text-primary">{publicFull}</h1>
             <div className="flex flex-wrap items-center gap-2 mt-2">
               <Link href={`/schools/${student.schoolId}`}>
                 <Badge variant="primary" size="md">{student.schoolName}</Badge>
@@ -111,12 +148,46 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
               <Badge variant="muted" size="md">
                 <span className="font-mono">{student.videos.length} videos</span>
               </Badge>
+              <Badge variant="muted" size="sm">
+                <span className="font-mono text-[10px]">ID {student.pnr}</span>
+              </Badge>
             </div>
+
+            {/* Staff-only reveal of the real name. Public visitors never see this control. */}
+            {isStaff && (
+              <div className="mt-3 flex items-center gap-3 text-xs">
+                {revealReal ? (
+                  <>
+                    <span className="text-gold font-mono">
+                      Real name: <strong className="text-text-primary">{student.realFirstName} {student.realLastName}</strong>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setRevealReal(false)}
+                      className="text-text-muted hover:text-text-primary underline"
+                    >
+                      hide
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setRevealReal(true)}
+                    className="text-text-muted hover:text-primary underline"
+                  >
+                    Reveal real name (staff only)
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-3 shrink-0 sm:self-start">
             <Link href={`/schools/${student.schoolId}`}>
               <Button variant="secondary" size="sm">View School</Button>
+            </Link>
+            <Link href={`/students/${student.pnr}/edit`}>
+              <Button variant="secondary" size="sm">Edit Name</Button>
             </Link>
           </div>
         </motion.div>
@@ -129,11 +200,11 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
               <GlassCard className="p-6" glow>
                 <h3 className="font-display font-bold text-lg text-text-primary mb-4">
-                  {student.name.split(' ')[0]}&apos;s Journey
+                  {firstNameForCopy}&apos;s Journey
                 </h3>
                 <p className="text-text-muted leading-relaxed mb-5">
-                  {student.name.split(' ')[0]} has been part of the MFK mentorship program for {student.monthsActive} months. 
-                  They&apos;ve logged {student.journalsLogged} learning journals, earned {student.skillsEarned} skill badges, 
+                  {firstNameForCopy} has been part of the MFK mentorship program for {student.monthsActive} months.
+                  They&apos;ve logged {student.journalsLogged} learning journals, earned {student.skillsEarned} skill badges,
                   and shared {student.videos.length} stories documenting their growth.
                 </p>
                 <div className="grid grid-cols-4 gap-3">
@@ -221,7 +292,7 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
                 </div>
               ) : (
                 <GlassCard className="p-8 text-center">
-                  <p className="text-text-muted">More videos coming soon as {student.name.split(' ')[0]} continues their journey.</p>
+                  <p className="text-text-muted">More videos coming soon as {firstNameForCopy} continues their journey.</p>
                 </GlassCard>
               )}
             </div>
@@ -235,7 +306,7 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
                 Community
               </h3>
               <p className="text-text-muted text-sm">
-                {student.sponsorCount} people are cheering for {student.name.split(' ')[0]}
+                {student.sponsorCount} people are cheering for {firstNameForCopy}
               </p>
               <div className="flex flex-wrap gap-2">
                 {studentDonors.map((donor) => (
@@ -279,11 +350,11 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
             {/* Soft support CTA — not aggressive */}
             <GlassCard className="p-6 space-y-4 border-gold/10">
               <h3 className="font-display font-bold text-lg text-text-primary">
-                Want to support {student.name.split(' ')[0]}?
+                Want to support {firstNameForCopy}?
               </h3>
               <p className="text-text-muted text-sm leading-relaxed">
-                Your contribution helps cover school supplies, activity materials, 
-                and keeps {student.name.split(' ')[0]}&apos;s learning journey going.
+                Your contribution helps cover school supplies, activity materials,
+                and keeps {firstNameForCopy}&apos;s learning journey going.
               </p>
               <div className="flex items-center gap-3 text-sm text-text-muted">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06D6A0" strokeWidth="2">
@@ -293,7 +364,7 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
               </div>
               <Link href="/donate">
                 <Button variant="secondary" className="w-full">
-                  Support {student.name.split(' ')[0]}&apos;s Journey
+                  Support {firstNameForCopy}&apos;s Journey
                 </Button>
               </Link>
             </GlassCard>

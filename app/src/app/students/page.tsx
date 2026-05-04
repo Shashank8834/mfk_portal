@@ -8,7 +8,7 @@ import { schools } from '@/data/schools';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Badge } from '@/components/ui/Badge';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
-import { displayName } from '@/lib/utils';
+import { publicName } from '@/lib/utils';
 
 type SortBy = 'name' | 'grade' | 'school';
 
@@ -26,19 +26,24 @@ export default function StudentsPage() {
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
+      // Search public surfaces only — assumed name, PNR, school. Real name is
+      // never matched here so a casual visitor can't find a child by it.
       result = result.filter(
         (s) =>
-          s.name.toLowerCase().includes(q) ||
+          publicName(s).toLowerCase().includes(q) ||
+          s.pnr.toLowerCase().includes(q) ||
           s.schoolName.toLowerCase().includes(q),
       );
     }
 
+    const cmpName = (a: typeof result[number], b: typeof result[number]) =>
+      publicName(a).localeCompare(publicName(b));
     switch (sortBy) {
       case 'name':
-        result.sort((a, b) => a.name.localeCompare(b.name));
+        result.sort(cmpName);
         break;
       case 'grade':
-        result.sort((a, b) => a.grade - b.grade || a.name.localeCompare(b.name));
+        result.sort((a, b) => a.grade - b.grade || cmpName(a, b));
         break;
       case 'school':
         result.sort((a, b) => a.schoolName.localeCompare(b.schoolName));
@@ -130,14 +135,14 @@ export default function StudentsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: Math.min(idx * 0.02, 0.4) }}
             >
-              <Link href={`/students/${student.id}`}>
+              <Link href={`/students/${student.pnr}`}>
                 <GlassCard className="p-4 flex items-center gap-4 group h-full">
                   <div className="w-11 h-11 rounded-xl bg-bg-elevated border border-border flex items-center justify-center shrink-0 text-primary font-display font-bold text-sm group-hover:border-primary/40 transition-colors">
                     {student.initials}
                   </div>
                   <div className="min-w-0 flex-1">
                     <h3 className="font-display font-semibold text-sm text-text-primary truncate group-hover:text-primary transition-colors">
-                      {displayName(student.name)}
+                      {publicName(student)}
                     </h3>
                     <p className="text-text-muted text-xs truncate">{student.schoolName}</p>
                     <div className="flex items-center gap-2 mt-1">

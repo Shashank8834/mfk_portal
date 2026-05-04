@@ -8,7 +8,7 @@ import { students } from '@/data/students';
 import { schools } from '@/data/schools';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
-import { displayName } from '@/lib/utils';
+import { publicName } from '@/lib/utils';
 import { useLocaleStore } from '@/stores/localeStore';
 import { t } from '@/lib/i18n';
 
@@ -165,13 +165,13 @@ export default function StoriesPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: Math.min(idx * 0.03, 0.5) }}
               >
-                <Link href={`/students/${student.id}`}>
+                <Link href={`/students/${student.pnr}`}>
                   <GlassCard className="overflow-hidden group h-full">
                     {/* Thumbnail */}
                     <div className="relative aspect-video overflow-hidden">
                       <Image
                         src={latestVideo?.thumbnailUrl || `/images/students/default.jpg`}
-                        alt={`${student.name}'s story`}
+                        alt={`${publicName(student)}'s story`}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -215,7 +215,7 @@ export default function StoriesPage() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <h3 className="font-display font-semibold text-text-primary truncate group-hover:text-primary transition-colors">
-                            {displayName(student.name)}
+                            {publicName(student)}
                           </h3>
                           <p className="text-text-muted text-xs truncate">
                             {student.schoolName} · Grade {student.grade}

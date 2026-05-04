@@ -20,7 +20,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { students as allStudents } from '@/data/students';
 import { schools } from '@/data/schools';
-import { displayName } from '@/lib/utils';
+import { publicName } from '@/lib/utils';
 import { useLocaleStore } from '@/stores/localeStore';
 import { t } from '@/lib/i18n';
 
@@ -137,7 +137,11 @@ export default function DonatePage() {
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {donationType === 'student' &&
                 allStudents
-                  .filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                  // Search by assumed name / PNR / school — never the real name.
+                  .filter(s => {
+                    const q = searchQuery.toLowerCase();
+                    return publicName(s).toLowerCase().includes(q) || s.pnr.toLowerCase().includes(q) || s.schoolName.toLowerCase().includes(q);
+                  })
                   .slice(0, 15)
                   .map((student) => (
                     <button
@@ -150,7 +154,7 @@ export default function DonatePage() {
                           {student.initials}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-text-primary truncate">{displayName(student.name)}</p>
+                          <p className="font-medium text-text-primary truncate">{publicName(student)}</p>
                           <p className="text-xs text-text-muted">{student.schoolName} · {t('donate.grade', locale, { grade: String(student.grade) })}</p>
                         </div>
                         <Badge variant="gold" size="sm">{t('donate.grade', locale, { grade: String(student.grade) })}</Badge>
@@ -203,7 +207,7 @@ export default function DonatePage() {
               {selectedStudent && (
                 <div className="flex items-center justify-between border-t border-border pt-3">
                   <span className="text-text-muted text-sm">{t('donate.studentLabel', locale)}</span>
-                  <span className="text-text-primary text-sm font-medium">{displayName(selectedStudent.name)}</span>
+                  <span className="text-text-primary text-sm font-medium">{publicName(selectedStudent)}</span>
                 </div>
               )}
               {selectedSchool && (
@@ -292,7 +296,7 @@ export default function DonatePage() {
                 <div className="w-16 h-16 rounded-xl bg-bg-elevated flex items-center justify-center text-2xl text-primary font-bold mx-auto mb-3">
                   {selectedStudent.initials}
                 </div>
-                <h3 className="font-display font-bold text-lg text-text-primary">{displayName(selectedStudent.name)}</h3>
+                <h3 className="font-display font-bold text-lg text-text-primary">{publicName(selectedStudent)}</h3>
                 <p className="text-text-muted text-sm mt-1">{t('donate.supportMeans', locale, { name: selectedStudent.name.split(' ')[0] })}</p>
               </GlassCard>
             )}

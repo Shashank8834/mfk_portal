@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
-import { displayName } from '@/lib/utils';
+import { publicName } from '@/lib/utils';
 
 export default function SchoolProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -24,7 +24,9 @@ export default function SchoolProfilePage({ params }: { params: Promise<{ id: st
   const students = getStudentsBySchool(id);
   const totalVideos = students.reduce((sum, s) => sum + s.videos.length, 0);
   const allVideos = students
-    .flatMap((s) => s.videos.map((v) => ({ ...v, studentName: s.name, studentId: s.id })))
+    // Public list — videos carry the student's PNR so the link goes to the
+    // anonymised URL, and the byline shows the assumed name only.
+    .flatMap((s) => s.videos.map((v) => ({ ...v, studentName: publicName(s), studentPnr: s.pnr })))
     .sort((a, b) => b.date.localeCompare(a.date));
   return (
     <div className="min-h-screen">
@@ -103,7 +105,7 @@ export default function SchoolProfilePage({ params }: { params: Promise<{ id: st
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.05 }}
                   >
-                    <Link href={`/students/${video.studentId}`}>
+                    <Link href={`/students/${video.studentPnr}`}>
                       <GlassCard className="overflow-hidden group">
                         <div className="flex flex-col sm:flex-row">
                           <div className="relative w-full sm:w-60 aspect-video sm:aspect-auto sm:h-36 shrink-0 overflow-hidden">
@@ -158,12 +160,12 @@ export default function SchoolProfilePage({ params }: { params: Promise<{ id: st
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.04 }}
                   >
-                    <Link href={`/students/${student.id}`}>
+                    <Link href={`/students/${student.pnr}`}>
                       <GlassCard className="p-4 flex items-center gap-4 group">
                         <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0">
                           <Image
                             src={student.videos[0]?.thumbnailUrl || getStudentImage(student.id)}
-                            alt={student.name}
+                            alt={publicName(student)}
                             fill
                             className="object-cover group-hover:scale-110 transition-transform"
                             sizes="56px"
@@ -172,7 +174,7 @@ export default function SchoolProfilePage({ params }: { params: Promise<{ id: st
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-medium text-text-primary group-hover:text-primary transition-colors truncate">
-                            {displayName(student.name)}
+                            {publicName(student)}
                           </h3>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="text-xs text-text-muted">Grade {student.grade}</span>

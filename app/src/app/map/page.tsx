@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { School } from '@/types';
 import { useLocaleStore } from '@/stores/localeStore';
 import { t } from '@/lib/i18n';
+import { publicName } from '@/lib/utils';
 
 /* ── Lazy-load Google Map (never bundled if key is empty) ── */
 const GoogleMapView = dynamic(() => import('@/components/GoogleMapView'), {
@@ -149,9 +150,9 @@ export default function MapPage() {
                 <p className="text-sm text-text-muted mb-2">{t('map.detail.students', locale)}</p>
                 <div className="flex gap-2">
                   {students.map((student) => (
-                    <Link key={student.id} href={`/students/${student.id}`}>
+                    <Link key={student.id} href={`/students/${student.pnr}`}>
                       <div className="w-20 h-14 rounded-lg overflow-hidden relative group">
-                        <Image src={student.videos[0]?.thumbnailUrl || getStudentImage(student.id)} alt={student.name} fill className="object-cover group-hover:scale-110 transition-transform" sizes="80px" />
+                        <Image src={student.videos[0]?.thumbnailUrl || getStudentImage(student.id)} alt={publicName(student)} fill className="object-cover group-hover:scale-110 transition-transform" sizes="80px" />
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                       </div>
                     </Link>

@@ -67,15 +67,24 @@ export function CommandPalette() {
         href: `/schools/${s.id}`,
       }));
 
+    // Search public attributes only (assumed name + PNR + school) so the
+    // command palette never reveals real names to anyone typing them.
     const studentResults: SearchResult[] = students
-      .filter((s) => s.name.toLowerCase().includes(lower) || s.schoolName.toLowerCase().includes(lower))
+      .filter((s) => {
+        const assumed = `${s.assumedFirstName} ${s.assumedLastInitial}`.toLowerCase();
+        return (
+          assumed.includes(lower) ||
+          s.pnr.toLowerCase().includes(lower) ||
+          s.schoolName.toLowerCase().includes(lower)
+        );
+      })
       .slice(0, 5)
       .map((s) => ({
         id: s.id,
         type: 'student',
-        title: s.name,
+        title: `${s.assumedFirstName} ${s.assumedLastInitial}.`,
         subtitle: `${s.schoolName} · Grade ${s.grade}`,
-        href: `/students/${s.id}`,
+        href: `/students/${s.pnr}`,
       }));
 
     setResults([...schoolResults, ...studentResults]);

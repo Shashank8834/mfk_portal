@@ -13,7 +13,18 @@ export interface School {
 
 export interface Student {
   id: string;
+  /** @deprecated Use realFirstName + realLastName for staff-only display, or publicName(student) for public surfaces. Retained for backward compatibility while callers migrate. */
   name: string;
+  realFirstName: string;
+  realLastName: string;
+  /** Child-chosen pseudonym shown on every public surface. Max 8 characters. */
+  assumedFirstName: string;
+  /** Child-chosen last initial (A–Z) shown on every public surface. */
+  assumedLastInitial: string;
+  /** 6-char alphanumeric PNR used as the public URL slug and QR payload. Stable for the life of the record. */
+  pnr: string;
+  /** When true, the public profile is shown as anonymised alumna. */
+  graduated: boolean;
   schoolId: string;
   schoolName: string;
   grade: number;

@@ -13,7 +13,7 @@ import { GlassCard } from '@/components/ui/GlassCard';
 import { Badge } from '@/components/ui/Badge';
 import { FavoriteButton } from '@/components/ui/FavoriteButton';
 import { Button } from '@/components/ui/Button';
-import { displayName } from '@/lib/utils';
+import { publicName } from '@/lib/utils';
 import { useLocaleStore } from '@/stores/localeStore';
 import { t } from '@/lib/i18n';
 
@@ -120,12 +120,12 @@ export default function FavoritesPage() {
                         transition={{ delay: idx * 0.03 }}
                         className="break-inside-avoid"
                       >
-                        <Link href={`/students/${student.id}`}>
+                        <Link href={`/students/${student.pnr}`}>
                           <GlassCard className="overflow-hidden group">
                             <div className="relative aspect-video">
                               <Image
                                 src={student.videos[0]?.thumbnailUrl || getStudentImage(student.id)}
-                                alt={student.name}
+                                alt={publicName(student)}
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 640px) 100vw, 33vw"
@@ -141,7 +141,7 @@ export default function FavoritesPage() {
                             </div>
                             <div className="p-4">
                               <h3 className="font-display font-semibold text-text-primary group-hover:text-primary transition-colors">
-                                {displayName(student.name)}
+                                {publicName(student)}
                               </h3>
                               <div className="flex items-center gap-2 mt-2">
                                 <Badge variant="primary" size="sm">

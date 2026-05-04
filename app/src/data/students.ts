@@ -1,5 +1,6 @@
 import { Student, Video } from '@/types';
 import { getVideoThumbnail } from '@/lib/images';
+import { ASSUMED_NAME_POOL, generatePnr, publicName, publicInitials } from '@/lib/utils';
 
 const firstNames = [
   'Aarav', 'Aditi', 'Ananya', 'Arjun', 'Diya', 'Ishaan', 'Kavya', 'Krishna',
@@ -40,16 +41,17 @@ function getInitials(name: string): string {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 }
 
-function generateVideo(studentId: string, studentName: string, schoolName: string, idx: number): Video {
+function generateVideo(studentId: string, publicStudentName: string, publicFirstName: string, schoolName: string, idx: number): Video {
   const storyType = storyTypes[idx % storyTypes.length];
-  const firstName = studentName.split(' ')[0];
   const day = Math.floor(Math.random() * 28) + 1;
   const month = Math.floor(Math.random() * 6) + 1;
   const mins = Math.floor(Math.random() * 4) + 1;
   const secs = Math.floor(Math.random() * 60);
   return {
     id: `vid-${studentId}-${idx}`,
-    title: `${firstName}'s Story — ${storyType}`,
+    // Public title uses the assumed name only — no real names ever appear in
+    // video metadata (Hartej's SOP: "in no video will the child's name be mentioned").
+    title: `${publicFirstName}'s Story — ${storyType}`,
     thumbnailUrl: getVideoThumbnail(studentId, idx),
     videoUrl: 'https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4',
     duration: `${mins}:${secs.toString().padStart(2, '0')}`,
@@ -57,7 +59,7 @@ function generateVideo(studentId: string, studentName: string, schoolName: strin
     date: `2025-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`,
     activityType: storyType,
     studentId,
-    studentName,
+    studentName: publicStudentName,
     schoolName,
   };
 }
@@ -66,6 +68,10 @@ function generateVideo(studentId: string, studentName: string, schoolName: strin
 function generateStudents(): Student[] {
   const students: Student[] = [];
   let studentIdx = 0;
+
+  // Stable letter sequence for the assumed last initial — deterministic from
+  // the index so it doesn't change across reloads.
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   for (let s = 0; s < schoolIds.length; s++) {
     const studentsPerSchool = 3 + Math.floor(Math.random() * 3);
@@ -76,20 +82,41 @@ function generateStudents(): Student[] {
       const fullName = `${firstName} ${lastName}`;
       const id = `stu-${String(studentIdx).padStart(3, '0')}`;
       const grade = 8 + Math.floor(Math.random() * 3); // Grades 8-10
+
+      // Anonymisation: pick an assumed first name from the pool that does not
+      // collide with the real first name (Hartej's constraint).
+      let assumedFirstName = ASSUMED_NAME_POOL[studentIdx % ASSUMED_NAME_POOL.length];
+      if (assumedFirstName.toLowerCase() === firstName.toLowerCase()) {
+        assumedFirstName = ASSUMED_NAME_POOL[(studentIdx + 1) % ASSUMED_NAME_POOL.length];
+      }
+      const assumedLastInitial = letters[(studentIdx * 7) % 26];
+      const pnr = generatePnr(id);
+      const stub = { assumedFirstName, assumedLastInitial, pnr, graduated: false };
+      const pubName = publicName(stub);
+      const pubFirst = assumedFirstName;
+
       const videoCount = 2 + Math.floor(Math.random() * 4);
       const videos: Video[] = [];
       for (let v = 0; v < videoCount; v++) {
-        videos.push(generateVideo(id, fullName, schoolNames[s], v));
+        videos.push(generateVideo(id, pubName, pubFirst, schoolNames[s], v));
       }
 
       students.push({
         id,
         name: fullName,
+        realFirstName: firstName,
+        realLastName: lastName,
+        assumedFirstName,
+        assumedLastInitial,
+        pnr,
+        graduated: false,
         schoolId: schoolIds[s],
         schoolName: schoolNames[s],
         grade,
-        avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=110F28&textColor=5B4DB1`,
-        initials: getInitials(fullName),
+        // Avatars are seeded on the public initials so the image itself
+        // doesn't leak the real name.
+        avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(pubName)}&backgroundColor=110F28&textColor=5B4DB1`,
+        initials: publicInitials(stub),
         videos,
         journalsLogged: 5 + Math.floor(Math.random() * 25),
         skillsEarned: 2 + Math.floor(Math.random() * 8),
@@ -105,6 +132,20 @@ export const students: Student[] = generateStudents();
 
 export function getStudentById(id: string): Student | undefined {
   return students.find((s) => s.id === id);
+}
+
+export function getStudentByPnr(pnr: string): Student | undefined {
+  const needle = pnr.toUpperCase();
+  return students.find((s) => s.pnr === needle);
+}
+
+/**
+ * Resolve a student by either internal id ("stu-007") or public PNR ("K7M2X9").
+ * Used by the dynamic route so old links keep working after the URL slug
+ * switched to PNR.
+ */
+export function lookupStudent(idOrPnr: string): Student | undefined {
+  return getStudentByPnr(idOrPnr) ?? getStudentById(idOrPnr);
 }
 
 export function getStudentsBySchool(schoolId: string): Student[] {
