@@ -54,7 +54,16 @@ export default function PrivacyPolicyPage() {
         <motion.section {...sectionAnim} className="space-y-4">
           <h2 className="font-display font-bold text-2xl text-text-primary">3. Children&rsquo;s privacy</h2>
           <GlassCard className="p-6 space-y-3 text-text-muted leading-relaxed">
-            <p>Public surfaces of the website (videos, listings, story pages) display children by an assumed name only. A child&rsquo;s real name is visible only to authorised foundation staff and mentors and is never spoken or shown in published video content. Parents or legal guardians may request access to, correction of, or deletion of their child&rsquo;s data at any time using the contact below.</p>
+            <p>Public surfaces of the website (videos, listings, story pages) display children by an assumed name only &mdash; a short pseudonym (max 8 characters) plus a single last initial. Each child also has a 6-character public identifier (PNR) used in their profile URL and printed QR code. A child&rsquo;s real name is visible only to authorised foundation staff and mentors and is never spoken or shown in published video content.</p>
+            <p>Children may change their assumed name at any time on their profile&rsquo;s edit screen. When a child graduates or otherwise exits the program, their profile is shown as an anonymous alumna placeholder and the underlying personal data is anonymised in line with our <Link href="/data-retention" className="text-primary hover:underline">Data Retention Policy</Link>.</p>
+            <p>Parents or legal guardians may request access to, correction of, or deletion of their child&rsquo;s data at any time using the contact below.</p>
+          </GlassCard>
+        </motion.section>
+
+        <motion.section {...sectionAnim} className="space-y-4">
+          <h2 className="font-display font-bold text-2xl text-text-primary">3a. AI processing</h2>
+          <GlassCard className="p-6 space-y-3 text-text-muted leading-relaxed">
+            <p>We do not currently use AI to process personal data. The Technology section of this site describes features we are considering &mdash; for example translation of journal entries, OCR of paper registers, and an automated safety check that flags any faces or names accidentally captured in videos before publication. Before any AI feature goes live, this policy will be updated and parents will be notified through the website.</p>
           </GlassCard>
         </motion.section>
 

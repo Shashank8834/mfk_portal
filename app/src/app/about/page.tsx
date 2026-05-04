@@ -404,6 +404,42 @@ export default function AboutPage() {
             </div>
           </GlassCard>
 
+          {/* AI — clearly marked as planned so we don't over-claim today */}
+          <GlassCard className="p-6 md:p-8 space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2a3 3 0 0 0-3 3v0a3 3 0 0 0-3 3v0a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3v0a3 3 0 0 0 3 3v0a3 3 0 0 0 3 3 3 3 0 0 0 3-3v0a3 3 0 0 0 3-3v0a3 3 0 0 0 3-3v-3a3 3 0 0 0-3-3v0a3 3 0 0 0-3-3v0a3 3 0 0 0-3-3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-display font-bold text-xl text-text-primary">AI</h3>
+                <p className="text-text-muted text-xs uppercase tracking-wider mt-0.5">Planned — not in production today</p>
+              </div>
+            </div>
+            <p className="text-text-muted text-sm leading-relaxed">
+              We don&apos;t process any personal data with AI today. The areas below are on our roadmap; before any of them goes live we will update the{' '}
+              <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link> and let parents know what changed.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                { title: 'Translation', desc: 'Auto-translate journal entries between English, Hindi, Kannada and Tamil so mentors and parents can read each other’s notes.' },
+                { title: 'Daily-register OCR', desc: 'Read scanned paper registers so attendance can be reconciled without re-typing.' },
+                { title: 'Spoken-English feedback', desc: 'Give children gentle, non-graded pronunciation hints during the spoken-English routine.' },
+                { title: 'Mentor digest', desc: 'Summarise a child’s recent journals and videos into a short weekly note for their mentor.' },
+                { title: 'Video safety check', desc: 'Auto-flag faces or names that slip into recorded clips before they are published, so we never break the anonymisation SOP.' },
+              ].map((item) => (
+                <div key={item.title} className="flex items-start gap-3 px-4 py-3 rounded-xl bg-bg-elevated/50 border border-border/50">
+                  <span className="inline-flex items-center justify-center px-2 py-0.5 mt-0.5 shrink-0 rounded-full bg-accent/10 border border-accent/30 text-accent text-[10px] font-semibold uppercase tracking-wider">Planned</span>
+                  <div>
+                    <span className="text-text-primary text-sm font-semibold block">{item.title}</span>
+                    <span className="text-text-muted text-xs">{item.desc}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </GlassCard>
+
           {/* Tech Lead Profile */}
           <Link href="/mentors/tech-lead">
             <GlassCard className="p-6 flex items-center gap-5 group cursor-pointer hover:border-primary/40 transition-colors">
