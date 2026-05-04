@@ -19,7 +19,7 @@ import { publicName } from '@/lib/utils';
 export default function SchoolProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const school = getSchoolById(id);
-  if (!school) notFound();
+  if (!school) return notFound();
 
   const students = getStudentsBySchool(id);
   const totalVideos = students.reduce((sum, s) => sum + s.videos.length, 0);

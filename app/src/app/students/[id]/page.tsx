@@ -20,7 +20,7 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
   // "stu-001" links so old saved URLs and bookmarks keep working.
   const { id } = use(params);
   const student = lookupStudent(id);
-  if (!student) notFound();
+  if (!student) return notFound();
 
   // Staff (admin or mentor) can reveal the real name on demand. This is a
   // UI-side gate only — real enforcement must live on the server once a

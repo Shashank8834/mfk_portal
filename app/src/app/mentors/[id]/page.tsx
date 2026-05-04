@@ -23,7 +23,7 @@ const profiles = [
 export default function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const profile = profiles.find((p) => p.id === id);
-  if (!profile) notFound();
+  if (!profile) return notFound();
 
   return (
     <div className="min-h-screen pt-28 pb-20">
