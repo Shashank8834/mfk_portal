@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarDays, ClipboardList, LogOut } from 'lucide-react';
+import { CalendarDays, ClipboardList, LogOut, Wifi, ScanLine } from 'lucide-react';
 
 const TABS = [
+  { href: '/mentor/today',      label: 'Today',      icon: ScanLine },
   { href: '/mentor',            label: 'Planning',   icon: CalendarDays },
   { href: '/mentor/attendance', label: 'My Record',  icon: ClipboardList },
 ];
@@ -26,12 +27,20 @@ export default function MentorLayout({ children }: { children: React.ReactNode }
               <p className="text-[10px] text-[#6B6590]">Mentor · JNV Koramangala</p>
             </div>
           </div>
-          <Link
-            href="/auth"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-red-500 hover:bg-red-50 font-medium transition-colors"
-          >
-            <LogOut size={13} /> Sign out
-          </Link>
+          <div className="flex items-center gap-2">
+            <span
+              className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-medium border border-emerald-200"
+              title="Connected to school router (JNV_SCHOOL_NET)"
+            >
+              <Wifi size={11} /> JNV_SCHOOL_NET
+            </span>
+            <Link
+              href="/auth"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-red-500 hover:bg-red-50 font-medium transition-colors"
+            >
+              <LogOut size={13} /> Sign out
+            </Link>
+          </div>
         </div>
 
         {/* Tab bar */}
