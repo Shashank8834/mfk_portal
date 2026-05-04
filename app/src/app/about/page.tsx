@@ -387,9 +387,10 @@ export default function AboutPage() {
               {/* Infrastructure */}
               <div className="space-y-2">
                 <span className="text-xs font-semibold text-mint uppercase tracking-wider">{t('about.infrastructure', locale)}</span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {[
                     { name: 'Vercel', desc: 'Hosting & CDN' },
+                    { name: 'DigitalOcean', desc: 'Video Storage' },
                     { name: 'GitHub', desc: 'Version Control' },
                     { name: 'Analytics', desc: 'Usage Insights' },
                   ].map((tech) => (

@@ -117,9 +117,20 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-text-muted text-xs text-center sm:text-left">
-            © {new Date().getFullYear()} Mentors for Kids Foundation. A not-for-profit initiative by BCL India.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-x-4 gap-y-2 text-center sm:text-left">
+            <p className="text-text-muted text-xs">
+              © {new Date().getFullYear()} Mentors for Kids Foundation. A not-for-profit initiative by BCL India.
+            </p>
+            <div className="flex items-center justify-center gap-3 text-xs">
+              <Link href="/privacy" className="text-text-muted hover:text-primary transition-colors">
+                Privacy Policy
+              </Link>
+              <span className="text-text-muted/40">·</span>
+              <Link href="/data-retention" className="text-text-muted hover:text-primary transition-colors">
+                Data Retention
+              </Link>
+            </div>
+          </div>
           <div className="flex items-center gap-2">
             <span className="glass px-3 py-1.5 rounded-lg text-xs text-text-muted flex items-center gap-1.5">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
